@@ -1,20 +1,418 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>VARS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VARS &mdash; Voice-based AI Resume System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --accent-glow: rgba(37, 99, 235, 0.25);
+            --green: #16a34a;
+            --green-glow: rgba(22, 163, 74, 0.25);
+            --red: #ef4444;
+            --red-glow: rgba(239, 68, 68, 0.3);
+            --bg: #0b0f1a;
+            --surface: #131825;
+            --surface-2: #1a2035;
+            --border: rgba(255,255,255,0.06);
+            --text: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* ── Subtle grid background ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37,99,235,0.08), transparent),
+                radial-gradient(circle at 20% 80%, rgba(99,102,241,0.04), transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            background: rgba(11,15,26,0.7);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), #818cf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .nav-badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(37,99,235,0.12);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(37,99,235,0.2);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        /* ── Main Content ── */
+        .main {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px 60px;
+            gap: 36px;
+        }
+
+        /* ── Hero Text ── */
+        .hero {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -1.2px;
+            line-height: 1.15;
+            margin-bottom: 14px;
+            background: linear-gradient(135deg, #fff 30%, #94a3b8 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            max-width: 460px;
+            margin: 0 auto;
+        }
+
+        /* ── Recording Card ── */
+        .record-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px 48px;
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 28px;
+            box-shadow: 0 4px 40px rgba(0,0,0,0.3);
+        }
+
+        /* ── Mic Button ── */
+        .mic-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .mic-ring {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid rgba(37,99,235,0.15);
+            transition: all 0.4s ease;
+        }
+
+        .mic-btn {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--accent), #4f46e5);
+            color: #fff;
+            font-size: 2.2rem;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 24px var(--accent-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mic-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 32px var(--accent-glow);
+        }
+
+        .mic-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Recording state */
+        .mic-btn.recording {
+            background: linear-gradient(135deg, var(--red), #dc2626);
+            box-shadow: 0 4px 24px var(--red-glow);
+            animation: pulse-btn 1.5s ease-in-out infinite;
+        }
+
+        .mic-btn.recording ~ .mic-ring {
+            border-color: rgba(239,68,68,0.3);
+            animation: pulse-ring 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-btn {
+            0%, 100% { box-shadow: 0 4px 24px var(--red-glow); }
+            50% { box-shadow: 0 4px 40px rgba(239,68,68,0.45); }
+        }
+
+        @keyframes pulse-ring {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.5; }
+        }
+
+        .mic-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Status Indicator ── */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            min-height: 24px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            transition: background 0.3s;
+        }
+
+        .status-dot.recording { background: var(--red); animation: blink 1s ease-in-out infinite; }
+        .status-dot.processing { background: #eab308; animation: blink 0.6s ease-in-out infinite; }
+        .status-dot.done { background: var(--green); }
+        .status-dot.error { background: var(--red); }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* ── Transcript Panel ── */
+        .transcript-panel {
+            width: 100%;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            min-height: 60px;
+            max-height: 160px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .transcript-panel.visible { display: block; }
+
+        .transcript-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .transcript-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ── Generate Button ── */
+        .generate-btn {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--green), #15803d);
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 20px var(--green-glow);
+            transition: all 0.25s ease;
+            letter-spacing: -0.2px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 28px var(--green-glow);
+        }
+
+        .generate-btn .icon { font-size: 1.15rem; }
+
+        /* ── Timer ── */
+        .timer {
+            font-family: 'Inter', monospace;
+            font-size: 1.6rem;
+            font-weight: 300;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            display: none;
+        }
+
+        .timer.visible { display: block; }
+
+        /* ── Waveform Visualizer ── */
+        .waveform {
+            width: 100%;
+            height: 48px;
+            display: none;
+        }
+
+        .waveform.visible { display: block; }
+
+        .waveform canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .navbar { padding: 16px 20px; }
+            .hero h1 { font-size: 1.8rem; }
+            .record-card { padding: 28px 24px; }
+            .mic-wrapper { width: 80px; height: 80px; }
+            .mic-btn { font-size: 1.8rem; }
+        }
+    </style>
 </head>
 <body>
 
-<h1>Voice-based AI Resume System</h1>
+<!-- ── Navbar ── -->
+<nav class="navbar">
+    <div class="logo">
+        <div class="logo-icon">🎙</div>
+        <span>VARS</span>
+    </div>
+    <span class="nav-badge">AI-Powered</span>
+</nav>
 
-<button id="recordBtn">🎤 Start Recording</button>
+<!-- ── Main ── -->
+<main class="main">
 
-<p id="status">Idle</p>
+    <div class="hero">
+        <h1>Build Your Resume<br>With Your Voice</h1>
+        <p>Speak naturally about your experience, skills, and projects. Our AI will structure everything into a professional resume instantly.</p>
+    </div>
 
-<h3>English Translation:</h3>
-<p id="transcriptBox"></p>
+    <div class="record-card">
 
-<a id="generateBtn" href="/generate-resume" style="display:none; margin-top:20px; padding:12px 24px; background:#2563eb; color:white; text-decoration:none; border-radius:8px; font-size:1rem; font-weight:600;">📄 Generate Resume</a>
+        <!-- Mic Button -->
+        <div class="mic-wrapper">
+            <button class="mic-btn" id="recordBtn">🎤</button>
+            <div class="mic-ring"></div>
+        </div>
+        <span class="mic-label" id="micLabel">Tap to start recording</span>
+
+        <!-- Timer -->
+        <div class="timer" id="timer">00:00</div>
+
+        <!-- Waveform -->
+        <div class="waveform" id="waveform">
+            <canvas id="waveCanvas"></canvas>
+        </div>
+
+        <!-- Status -->
+        <div class="status-bar">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="status">Ready</span>
+        </div>
+
+        <!-- Transcript -->
+        <div class="transcript-panel" id="transcriptPanel">
+            <div class="transcript-label">Transcription</div>
+            <div class="transcript-text" id="transcriptBox"></div>
+        </div>
+
+    </div>
+
+    <!-- Generate Resume -->
+    <a class="generate-btn" id="generateBtn" href="/generate-resume">
+        <span class="icon">📄</span>
+        Generate Resume
+    </a>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+    VARS &mdash; Voice-based AI Resume System &bull; Powered by Whisper &amp; LLaMA
+</footer>
 
 <script src="/static/recorder.js"></script>
 
