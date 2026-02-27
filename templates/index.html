@@ -1,27 +1,22 @@
 <!DOCTYPE html>
-<html lang="ml">
+<html>
 <head>
-    <meta charset="UTF-8" />
     <title>VARS</title>
-    <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
-        #transcript { margin-top: 20px; padding: 15px; border: 1px solid #ccc;
-                      border-radius: 8px; min-height: 60px; font-size: 1.2em;
-                      background: #f9f9f9; white-space: pre-wrap; }
-        button { padding: 12px 24px; font-size: 1em; cursor: pointer; border-radius: 8px;
-                 border: none; background: #4CAF50; color: white; }
-        button:hover { background: #45a049; }
-    </style>
 </head>
 <body>
-    <h1>Voice-based AI Resume System</h1>
-    <p>മലയാളത്തിൽ സംസാരിക്കുക (Speak in Malayalam)</p>
 
-    <button id="recordBtn">🎤 Start Recording</button>
-    <p id="status">Idle</p>
+<h1>Voice-based AI Resume System</h1>
 
-    <div id="transcript">Transcription will appear here...</div>
+<button id="recordBtn">🎤 Start Recording</button>
 
-    <script src="/static/recorder.js"></script>
+<p id="status">Idle</p>
+
+<h3>English Translation:</h3>
+<p id="transcriptBox"></p>
+
+<a id="generateBtn" href="/generate-resume" style="display:none; margin-top:20px; padding:12px 24px; background:#2563eb; color:white; text-decoration:none; border-radius:8px; font-size:1rem; font-weight:600;">📄 Generate Resume</a>
+
+<script src="/static/recorder.js"></script>
+
 </body>
 </html>

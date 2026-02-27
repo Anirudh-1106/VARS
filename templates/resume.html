@@ -146,13 +146,13 @@
 
     <!-- ══ HEADER ══ -->
     <header class="header">
-        <h1>{{ resume.name or "Your Name" }}</h1>
+        <h1 contenteditable="false">{{ resume.name or "Your Name" }}</h1>
         <div class="contact-row">
             {% if resume.email %}
-                <span class="contact-item">{{ resume.email }}</span>
+                <span class="contact-item" contenteditable="false">{{ resume.email }}</span>
             {% endif %}
             {% if resume.phone %}
-                <span class="contact-item">{{ resume.phone }}</span>
+                <span class="contact-item" contenteditable="false">{{ resume.phone }}</span>
             {% endif %}
             {% if resume.linkedin %}
                 <span class="contact-item"><a href="{{ resume.linkedin }}" target="_blank">LinkedIn</a></span>
@@ -165,25 +165,25 @@
 
     <!-- ══ SUMMARY ══ -->
     {% if resume.summary %}
-    <section class="section">
+    <section class="section" id="section-summary">
         <div class="section-header">
             <span class="section-title">Summary</span>
             <button class="edit-btn" onclick="editSection('summary')">Edit</button>
         </div>
-        <p class="summary-text">{{ resume.summary }}</p>
+        <p class="summary-text" contenteditable="false">{{ resume.summary }}</p>
     </section>
     {% endif %}
 
     <!-- ══ SKILLS ══ -->
     {% if resume.skills %}
-    <section class="section">
+    <section class="section" id="section-skills">
         <div class="section-header">
             <span class="section-title">Skills</span>
             <button class="edit-btn" onclick="editSection('skills')">Edit</button>
         </div>
         <div class="skills-list">
             {% for skill in resume.skills %}
-                <span class="skill-pill">{{ skill }}</span>
+                {% if skill and skill != 'None' %}<span class="skill-pill">{{ skill }}</span>{% endif %}
             {% endfor %}
         </div>
     </section>
@@ -191,70 +191,76 @@
 
     <!-- ══ EXPERIENCE ══ -->
     {% if resume.experience %}
-    <section class="section">
+    <section class="section" id="section-experience">
         <div class="section-header">
             <span class="section-title">Experience</span>
             <button class="edit-btn" onclick="editSection('experience')">Edit</button>
         </div>
         {% for exp in resume.experience %}
+        {% if exp.role or exp.company %}
         <div class="exp-item">
             <div class="exp-top">
                 <div>
-                    <span class="exp-role">{{ exp.role }}</span>
-                    <span class="exp-company"> &mdash; {{ exp.company }}</span>
+                    {% if exp.role and exp.role != 'None' %}<span class="exp-role" contenteditable="false">{{ exp.role }}</span>{% endif %}
+                    {% if exp.company and exp.company != 'None' %}<span class="exp-company"> &mdash; <span contenteditable="false">{{ exp.company }}</span></span>{% endif %}
                 </div>
-                <span class="exp-duration">{{ exp.duration }}</span>
+                {% if exp.duration and exp.duration != 'None' %}<span class="exp-duration" contenteditable="false">{{ exp.duration }}</span>{% endif %}
             </div>
             {% if exp.bullets %}
             <ul class="exp-bullets">
                 {% for bullet in exp.bullets %}
-                    <li>{{ bullet }}</li>
+                    {% if bullet and bullet != 'None' %}<li contenteditable="false">{{ bullet }}</li>{% endif %}
                 {% endfor %}
             </ul>
             {% endif %}
         </div>
+        {% endif %}
         {% endfor %}
     </section>
     {% endif %}
 
     <!-- ══ EDUCATION ══ -->
     {% if resume.education %}
-    <section class="section">
+    <section class="section" id="section-education">
         <div class="section-header">
             <span class="section-title">Education</span>
             <button class="edit-btn" onclick="editSection('education')">Edit</button>
         </div>
         {% for edu in resume.education %}
+        {% if edu.degree or edu.institution %}
         <div class="edu-item">
             <div>
-                <span class="edu-degree">{{ edu.degree }}</span>
-                <span class="edu-institution"> &mdash; {{ edu.institution }}</span>
+                {% if edu.degree and edu.degree != 'None' %}<span class="edu-degree" contenteditable="false">{{ edu.degree }}</span>{% endif %}
+                {% if edu.institution and edu.institution != 'None' %}<span class="edu-institution"> &mdash; <span contenteditable="false">{{ edu.institution }}</span></span>{% endif %}
             </div>
-            <span class="edu-year">{{ edu.year }}</span>
+            {% if edu.year and edu.year != 'None' %}<span class="edu-year" contenteditable="false">{{ edu.year }}</span>{% endif %}
         </div>
+        {% endif %}
         {% endfor %}
     </section>
     {% endif %}
 
     <!-- ══ PROJECTS ══ -->
     {% if resume.projects %}
-    <section class="section">
+    <section class="section" id="section-projects">
         <div class="section-header">
             <span class="section-title">Projects</span>
             <button class="edit-btn" onclick="editSection('projects')">Edit</button>
         </div>
         {% for proj in resume.projects %}
+        {% if proj.name and proj.name != 'None' %}
         <div class="proj-item">
-            <span class="proj-name">{{ proj.name }}</span>
-            <p class="proj-desc">{{ proj.description }}</p>
+            <span class="proj-name" contenteditable="false">{{ proj.name }}</span>
+            {% if proj.description and proj.description != 'None' %}<p class="proj-desc" contenteditable="false">{{ proj.description }}</p>{% endif %}
             {% if proj.tech_stack %}
             <div class="proj-tech">
                 {% for tech in proj.tech_stack %}
-                    <span class="proj-tech-tag">{{ tech }}</span>
+                    {% if tech and tech != 'None' %}<span class="proj-tech-tag">{{ tech }}</span>{% endif %}
                 {% endfor %}
             </div>
             {% endif %}
         </div>
+        {% endif %}
         {% endfor %}
     </section>
     {% endif %}
@@ -263,23 +269,147 @@
 
 <!-- ══ FLOATING BUTTONS (screen only) ══ -->
 <div class="floating-actions">
-    <button class="fab fab-pdf" onclick="window.location.href='/resume/download'">&#128196; Download PDF</button>
+    <button class="fab fab-pdf" onclick="downloadPDF()">&#128196; Download PDF</button>
+    <button class="fab fab-save" id="saveBtn" style="display:none; background:#16a34a; color:#fff;" onclick="saveEdits()">&#128190; Save Changes</button>
     <button class="fab fab-back" onclick="window.location.href='/'">&#8592; Back</button>
 </div>
 
 <script>
+    let editingMode = false;
+
     function editSection(field) {
-        fetch("/edit", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ field: field })
+        // Toggle contenteditable on the resume page
+        editingMode = !editingMode;
+        const editables = document.querySelectorAll('[contenteditable]');
+        editables.forEach(el => {
+            el.contentEditable = editingMode ? 'true' : 'false';
+            if (editingMode) {
+                el.style.outline = '1px dashed #2563eb';
+                el.style.padding = '2px 4px';
+                el.style.borderRadius = '3px';
+            } else {
+                el.style.outline = '';
+                el.style.padding = '';
+            }
+        });
+
+        const saveBtn = document.getElementById('saveBtn');
+        saveBtn.style.display = editingMode ? 'inline-block' : 'none';
+
+        // Update all Edit buttons
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.textContent = editingMode ? 'Done' : 'Edit';
+        });
+    }
+
+    function collectResumeData() {
+        const data = {};
+
+        // Name
+        const h1 = document.querySelector('.header h1');
+        if (h1) data.name = h1.textContent.trim();
+
+        // Contact
+        const contactItems = document.querySelectorAll('.contact-item');
+        contactItems.forEach(item => {
+            const text = item.textContent.trim();
+            if (text.includes('@')) data.email = text;
+            else if (/[\d\-\+\(\)]{7,}/.test(text)) data.phone = text;
+        });
+
+        // Summary
+        const summary = document.querySelector('.summary-text');
+        if (summary) data.summary = summary.textContent.trim();
+
+        // Skills
+        const skillPills = document.querySelectorAll('.skill-pill');
+        if (skillPills.length) {
+            data.skills = Array.from(skillPills).map(s => s.textContent.trim()).filter(Boolean);
+        }
+
+        // Experience
+        const expItems = document.querySelectorAll('.exp-item');
+        if (expItems.length) {
+            data.experience = Array.from(expItems).map(item => {
+                const role = item.querySelector('.exp-role');
+                const company = item.querySelector('.exp-company');
+                const duration = item.querySelector('.exp-duration');
+                const bullets = item.querySelectorAll('.exp-bullets li');
+                return {
+                    role: role ? role.textContent.trim() : '',
+                    company: company ? company.textContent.replace('—', '').trim() : '',
+                    duration: duration ? duration.textContent.trim() : '',
+                    bullets: Array.from(bullets).map(b => b.textContent.trim()).filter(Boolean)
+                };
+            });
+        }
+
+        // Education
+        const eduItems = document.querySelectorAll('.edu-item');
+        if (eduItems.length) {
+            data.education = Array.from(eduItems).map(item => {
+                const degree = item.querySelector('.edu-degree');
+                const institution = item.querySelector('.edu-institution');
+                const year = item.querySelector('.edu-year');
+                return {
+                    degree: degree ? degree.textContent.trim() : '',
+                    institution: institution ? institution.textContent.replace('—', '').trim() : '',
+                    year: year ? year.textContent.trim() : ''
+                };
+            });
+        }
+
+        // Projects
+        const projItems = document.querySelectorAll('.proj-item');
+        if (projItems.length) {
+            data.projects = Array.from(projItems).map(item => {
+                const name = item.querySelector('.proj-name');
+                const desc = item.querySelector('.proj-desc');
+                const techTags = item.querySelectorAll('.proj-tech-tag');
+                return {
+                    name: name ? name.textContent.trim() : '',
+                    description: desc ? desc.textContent.trim() : '',
+                    tech_stack: Array.from(techTags).map(t => t.textContent.trim()).filter(Boolean)
+                };
+            });
+        }
+
+        return data;
+    }
+
+    function saveEdits() {
+        const data = collectResumeData();
+        fetch('/save-resume', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
         })
         .then(res => res.json())
-        .then(data => {
-            console.log("Edit response:", data);
-            if (data.message) alert(data.message);
+        .then(result => {
+            if (result.error) {
+                alert('Save failed: ' + result.error);
+            } else {
+                // Exit edit mode
+                editingMode = true;
+                editSection(''); // toggles off
+                alert('Changes saved!');
+            }
         })
-        .catch(err => console.error("Edit error:", err));
+        .catch(err => {
+            console.error('Save error:', err);
+            alert('Failed to save changes.');
+        });
+    }
+
+    function downloadPDF() {
+        // Hide buttons during print
+        document.querySelector('.floating-actions').style.display = 'none';
+        document.querySelectorAll('.edit-btn').forEach(b => b.style.display = 'none');
+        window.print();
+        setTimeout(() => {
+            document.querySelector('.floating-actions').style.display = '';
+            document.querySelectorAll('.edit-btn').forEach(b => b.style.display = '');
+        }, 500);
     }
 </script>
 
