@@ -74,9 +74,13 @@ async function startRecording() {
                         console.log("LLM extraction:", llmData);
 
                         if (llmData.error) {
-                            statusText.textContent = "Extraction failed: " + llmData.error;
+                            statusText.textContent = "Error: " + llmData.error;
+                        } else if (llmData.action === "modify") {
+                            statusText.textContent = "✅ Resume updated as per your instruction! Record more or Generate Resume.";
+                            const genBtn = document.getElementById("generateBtn");
+                            if (genBtn) genBtn.style.display = "inline-block";
                         } else {
-                            statusText.textContent = "Resume data extracted! You can record more or click Generate Resume.";
+                            statusText.textContent = "✅ Resume data extracted! You can record more or click Generate Resume.";
                             const genBtn = document.getElementById("generateBtn");
                             if (genBtn) genBtn.style.display = "inline-block";
                         }

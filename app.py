@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 from state import ResumeState
-from services.llm_service import extract_resume_data, refine_resume_data
+from services.llm_service import classify_intent, extract_resume_data, modify_resume_data, refine_resume_data
 import torch
 import os
 import uuid
@@ -121,7 +121,7 @@ def transcribe_audio():
 
 @app.route("/process-transcript", methods=["POST"])
 def process_transcript():
-    """Accept a transcript, extract structured resume data via LLM, and update state."""
+    """Accept a transcript, classify intent, and either add or modify resume data."""
     payload = request.get_json(force=True)
     transcript = payload.get("transcript")
 
@@ -129,14 +129,39 @@ def process_transcript():
         return jsonify({"error": "No transcript provided"}), 400
 
     try:
-        extracted = extract_resume_data(transcript)
-        resume_state.update(extracted)
-        return jsonify({
-            "message": "Resume data extracted and saved.",
-            "data": resume_state.get_resume_data(),
-        })
+        intent = classify_intent(transcript)
+        print(f"Intent detected: {intent}")
+
+        if intent == "modify":
+            current_data = resume_state.get_resume_data()
+            # Only allow modify if there is existing data
+            has_data = any(
+                v for v in current_data.values()
+                if v is not None and v != []
+            )
+            if not has_data:
+                return jsonify({
+                    "error": "Nothing to modify yet. Please add resume content first."
+                }), 400
+
+            updated = modify_resume_data(current_data, transcript)
+            resume_state.update(updated, replace_lists=True)
+            return jsonify({
+                "message": "Resume updated as per your instruction.",
+                "action": "modify",
+                "data": resume_state.get_resume_data(),
+            })
+        else:
+            extracted = extract_resume_data(transcript)
+            resume_state.update(extracted)
+            return jsonify({
+                "message": "Resume data extracted and saved.",
+                "action": "add",
+                "data": resume_state.get_resume_data(),
+            })
+
     except ValueError as e:
-        return jsonify({"error": f"Extraction failed: {e}"}), 500
+        return jsonify({"error": f"Processing failed: {e}"}), 500
     except Exception as e:
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
