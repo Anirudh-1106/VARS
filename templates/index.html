@@ -365,6 +365,123 @@
             color: var(--text-secondary);
         }
 
+        /* ── Missing Details Assistant ── */
+        .missing-panel {
+            width: 100%;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 18px;
+            display: none;
+        }
+
+        .missing-panel.visible { display: block; }
+
+        .missing-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 10px;
+        }
+
+        .missing-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(201, 247, 255, 0.9);
+        }
+
+        .missing-step {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+        }
+
+        .missing-progress {
+            width: 100%;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.09);
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .missing-progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent), #00b7e7);
+            transition: width 0.25s ease;
+        }
+
+        .missing-question {
+            font-size: 0.96rem;
+            color: var(--text);
+            margin-bottom: 6px;
+            line-height: 1.45;
+        }
+
+        .missing-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .missing-input {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(11, 15, 26, 0.72);
+            color: var(--text);
+            padding: 11px 12px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .missing-input:focus {
+            border-color: rgba(0, 240, 255, 0.55);
+            box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.12);
+        }
+
+        .missing-error {
+            min-height: 18px;
+            margin-top: 7px;
+            font-size: 0.78rem;
+            color: #ff8787;
+        }
+
+        .missing-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .missing-btn {
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 9px;
+            padding: 9px 13px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.2s ease;
+        }
+
+        .missing-btn:hover { transform: translateY(-1px); }
+        .missing-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+        .missing-btn.primary {
+            background: linear-gradient(135deg, var(--accent), #00b7e7);
+            color: #031219;
+            border-color: transparent;
+        }
+
+        .missing-btn.ghost {
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+        }
+
         /* ── Generate Button ── */
         .generate-btn {
             display: none;
@@ -415,6 +532,8 @@
             .status-bar { margin-top: 16px; font-size: 0.92rem; }
             .review-actions { flex-direction: column; }
             .review-btn { width: 100%; }
+            .missing-actions { flex-direction: column; }
+            .missing-btn { width: 100%; }
         }
     </style>
 </head>
@@ -468,6 +587,23 @@
             <div class="transcript-text" id="transcriptBox"></div>
         </div>
 
+        <div class="missing-panel" id="missingPanel">
+            <div class="missing-head">
+                <div class="missing-title">Details Needed</div>
+                <div class="missing-step" id="missingStep">Question 1 of 1</div>
+            </div>
+            <div class="missing-progress"><div class="missing-progress-fill" id="missingProgressFill"></div></div>
+            <div class="missing-question" id="missingQuestionText"></div>
+            <div class="missing-hint" id="missingHintText"></div>
+            <input id="missingAnswerInput" class="missing-input" type="text" placeholder="Type your answer" />
+            <div class="missing-error" id="missingErrorText"></div>
+            <div class="missing-actions">
+                <button type="button" id="missingBackBtn" class="missing-btn ghost">Back</button>
+                <button type="button" id="missingSkipBtn" class="missing-btn ghost">Skip</button>
+                <button type="button" id="missingNextBtn" class="missing-btn primary">Next</button>
+            </div>
+        </div>
+
     </div>
 
     <!-- Generate Resume -->
@@ -483,7 +619,7 @@
     VARS &mdash; Voice-based AI Resume System &bull; Powered by Whisper &amp; LLaMA
 </footer>
 
-<script src="/static/recorder.js?v=4"></script>
+<script src="/static/recorder.js?v=5"></script>
 
 </body>
 </html>

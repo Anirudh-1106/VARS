@@ -10,6 +10,16 @@ const reviewTranscript = document.getElementById("reviewTranscript");
 const confirmTranscriptBtn = document.getElementById("confirmTranscriptBtn");
 const retryTranscriptBtn = document.getElementById("retryTranscriptBtn");
 const cancelReviewBtn = document.getElementById("cancelReviewBtn");
+const missingPanel = document.getElementById("missingPanel");
+const missingStep = document.getElementById("missingStep");
+const missingProgressFill = document.getElementById("missingProgressFill");
+const missingQuestionText = document.getElementById("missingQuestionText");
+const missingHintText = document.getElementById("missingHintText");
+const missingAnswerInput = document.getElementById("missingAnswerInput");
+const missingErrorText = document.getElementById("missingErrorText");
+const missingBackBtn = document.getElementById("missingBackBtn");
+const missingSkipBtn = document.getElementById("missingSkipBtn");
+const missingNextBtn = document.getElementById("missingNextBtn");
 
 const drawCtx = orbCanvas.getContext("2d", { alpha: true });
 
@@ -25,6 +35,9 @@ let state = "idle";
 let phase = 0;
 let smoothEnergy = 0;
 let pendingTranscript = "";
+let workingResumeData = null;
+let missingQuestions = [];
+let missingIndex = 0;
 
 const STATE = {
     IDLE: "idle",
@@ -51,6 +64,243 @@ function setReviewButtonsDisabled(disabled) {
             btn.disabled = disabled;
         }
     });
+}
+
+function hasText(value) {
+    return typeof value === "string" && value.trim().length > 0 && value.trim().toLowerCase() !== "none";
+}
+
+function toggleMissingPanel(show) {
+    if (!missingPanel) {
+        return;
+    }
+
+    missingPanel.classList.toggle("visible", show);
+}
+
+function setMissingButtonsDisabled(disabled) {
+    [missingBackBtn, missingSkipBtn, missingNextBtn].forEach((btn) => {
+        if (btn) {
+            btn.disabled = disabled;
+        }
+    });
+}
+
+function getPathValue(obj, path) {
+    return path.split(".").reduce((acc, key) => {
+        if (acc == null) {
+            return undefined;
+        }
+
+        if (/^\d+$/.test(key)) {
+            return acc[Number(key)];
+        }
+        return acc[key];
+    }, obj);
+}
+
+function setPathValue(obj, path, value) {
+    const keys = path.split(".");
+    let target = obj;
+
+    for (let i = 0; i < keys.length - 1; i += 1) {
+        const key = /^\d+$/.test(keys[i]) ? Number(keys[i]) : keys[i];
+        const nextKey = keys[i + 1];
+        const shouldBeArray = /^\d+$/.test(nextKey);
+
+        if (target[key] == null) {
+            target[key] = shouldBeArray ? [] : {};
+        }
+
+        target = target[key];
+    }
+
+    const lastKey = /^\d+$/.test(keys[keys.length - 1]) ? Number(keys[keys.length - 1]) : keys[keys.length - 1];
+    target[lastKey] = value;
+}
+
+function buildMissingQuestions(data) {
+    const questions = [];
+
+    if (!hasText(data?.name)) {
+        questions.push({
+            key: "name",
+            path: "name",
+            question: "What is your full name?",
+            hint: "Use the name you want on the resume.",
+            placeholder: "Example: Ananya Raj",
+            validate: (value) => hasText(value) || "Name is required."
+        });
+    }
+
+    if (!hasText(data?.email)) {
+        questions.push({
+            key: "email",
+            path: "email",
+            question: "What is your email address?",
+            hint: "Recruiters use this as your primary contact.",
+            placeholder: "Example: name@example.com",
+            validate: (value) => {
+                if (!hasText(value)) {
+                    return "Email is required.";
+                }
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(value.trim()) || "Enter a valid email address.";
+            }
+        });
+    }
+
+    if (!hasText(data?.phone)) {
+        questions.push({
+            key: "phone",
+            path: "phone",
+            question: "What is your phone number?",
+            hint: "Include country code if needed.",
+            placeholder: "Example: +91 98765 43210",
+            validate: (value) => {
+                if (!hasText(value)) {
+                    return "Phone number is required.";
+                }
+                const digits = value.replace(/\D/g, "");
+                return digits.length >= 7 || "Enter a valid phone number.";
+            }
+        });
+    }
+
+    const experienceList = Array.isArray(data?.experience) ? data.experience : [];
+    experienceList.forEach((item, idx) => {
+        const role = hasText(item?.role) ? item.role.trim() : "this role";
+        const company = hasText(item?.company) ? item.company.trim() : "this company";
+        const label = `${role} at ${company}`;
+
+        if (!hasText(item?.duration) && (hasText(item?.role) || hasText(item?.company))) {
+            questions.push({
+                key: `experience-${idx}-duration`,
+                path: `experience.${idx}.duration`,
+                question: `What is the date range for ${label}?`,
+                hint: "Format: Jun 2021 - Aug 2023",
+                placeholder: "Example: Jun 2021 - Aug 2023",
+                validate: (value) => hasText(value) || "Please add a duration or skip."
+            });
+        }
+    });
+
+    return questions;
+}
+
+function renderMissingQuestion() {
+    if (!missingQuestions.length) {
+        return;
+    }
+
+    const total = missingQuestions.length;
+    const current = missingQuestions[missingIndex];
+    const answer = getPathValue(workingResumeData, current.path);
+
+    missingStep.textContent = `Question ${missingIndex + 1} of ${total}`;
+    missingProgressFill.style.width = `${((missingIndex + 1) / total) * 100}%`;
+    missingQuestionText.textContent = current.question;
+    missingHintText.textContent = current.hint;
+    missingAnswerInput.placeholder = current.placeholder || "Type your answer";
+    missingAnswerInput.value = hasText(answer) ? answer : "";
+    missingErrorText.textContent = "";
+    missingBackBtn.disabled = missingIndex === 0;
+    missingNextBtn.textContent = missingIndex === total - 1 ? "Save & Finish" : "Next";
+
+    missingAnswerInput.focus();
+}
+
+function openMissingAssistant(data) {
+    workingResumeData = JSON.parse(JSON.stringify(data || {}));
+    missingQuestions = buildMissingQuestions(workingResumeData);
+    missingIndex = 0;
+
+    if (!missingQuestions.length) {
+        toggleMissingPanel(false);
+        setStatus("Data extracted - record more or generate", "done");
+        const genBtn = document.getElementById("generateBtn");
+        if (genBtn) {
+            genBtn.style.display = "inline-flex";
+        }
+        return;
+    }
+
+    toggleMissingPanel(true);
+    setStatus("Please fill missing details", "processing");
+    renderMissingQuestion();
+}
+
+async function saveMissingDetails() {
+    setMissingButtonsDisabled(true);
+    setStatus("Saving details...", "processing");
+
+    try {
+        const response = await fetch("/save-resume", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(workingResumeData)
+        });
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+            setStatus(data.error || "Unable to save details", "error");
+            setMissingButtonsDisabled(false);
+            return;
+        }
+
+        toggleMissingPanel(false);
+        setStatus("Details updated. Resume is ready", "done");
+        const genBtn = document.getElementById("generateBtn");
+        if (genBtn) {
+            genBtn.style.display = "inline-flex";
+        }
+    } catch (error) {
+        console.error("Save details error:", error);
+        setStatus("Unable to save details", "error");
+        setMissingButtonsDisabled(false);
+    }
+}
+
+async function onMissingNext() {
+    const current = missingQuestions[missingIndex];
+    const value = missingAnswerInput.value.trim();
+
+    const validation = current.validate(value);
+    if (validation !== true) {
+        missingErrorText.textContent = validation;
+        return;
+    }
+
+    setPathValue(workingResumeData, current.path, value);
+
+    if (missingIndex === missingQuestions.length - 1) {
+        await saveMissingDetails();
+        return;
+    }
+
+    missingIndex += 1;
+    renderMissingQuestion();
+}
+
+function onMissingSkip() {
+    missingErrorText.textContent = "";
+
+    if (missingIndex === missingQuestions.length - 1) {
+        saveMissingDetails();
+        return;
+    }
+
+    missingIndex += 1;
+    renderMissingQuestion();
+}
+
+function onMissingBack() {
+    if (missingIndex === 0) {
+        return;
+    }
+
+    missingIndex -= 1;
+    renderMissingQuestion();
 }
 
 function handleStateChange(nextState) {
@@ -215,6 +465,7 @@ function drawVisualizer(now) {
 
 async function startRecording() {
     try {
+        toggleMissingPanel(false);
         await initAudio();
 
         mediaRecorder = new MediaRecorder(stream);
@@ -320,12 +571,8 @@ async function processConfirmedTranscript() {
             }
             toggleReviewPanel(false);
         } else {
-            setStatus("Data extracted - record more or generate", "done");
-            const genBtn = document.getElementById("generateBtn");
-            if (genBtn) {
-                genBtn.style.display = "inline-flex";
-            }
             toggleReviewPanel(false);
+            openMissingAssistant(llmData.data || {});
         }
     } catch (llmError) {
         console.error("LLM error:", llmError);
@@ -352,6 +599,7 @@ confirmTranscriptBtn.addEventListener("click", async () => {
 
 retryTranscriptBtn.addEventListener("click", async () => {
     toggleReviewPanel(false);
+    toggleMissingPanel(false);
     transcriptPanel.classList.remove("visible");
     pendingTranscript = "";
     reviewTranscript.value = "";
@@ -365,6 +613,25 @@ cancelReviewBtn.addEventListener("click", () => {
     reviewTranscript.value = "";
     setStatus("Ready", "");
     handleStateChange(STATE.IDLE);
+});
+
+missingNextBtn.addEventListener("click", async () => {
+    await onMissingNext();
+});
+
+missingSkipBtn.addEventListener("click", () => {
+    onMissingSkip();
+});
+
+missingBackBtn.addEventListener("click", () => {
+    onMissingBack();
+});
+
+missingAnswerInput.addEventListener("keydown", async (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        await onMissingNext();
+    }
 });
 
 window.addEventListener("resize", resizeCanvas, { passive: true });
@@ -384,4 +651,5 @@ resizeCanvas();
 handleStateChange(STATE.IDLE);
 setStatus("Ready", "");
 toggleReviewPanel(false);
+toggleMissingPanel(false);
 animationId = requestAnimationFrame(drawVisualizer);
