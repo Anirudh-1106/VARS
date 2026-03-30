@@ -75,6 +75,19 @@ function hasText(value) {
     return typeof value === "string" && value.trim().length > 0 && value.trim().toLowerCase() !== "none";
 }
 
+function normalizeUrl(value) {
+    const trimmed = (value || "").trim();
+    if (!trimmed) {
+        return "";
+    }
+
+    if (/^https?:\/\//i.test(trimmed)) {
+        return trimmed;
+    }
+
+    return `https://${trimmed}`;
+}
+
 function toggleMissingPanel(show) {
     if (!missingPanel) {
         return;
@@ -291,6 +304,42 @@ function buildMissingQuestions(data) {
         });
     }
 
+    if (!hasText(data?.linkedin)) {
+        questions.push({
+            key: "linkedin",
+            path: "linkedin",
+            question: "What is your LinkedIn profile link?",
+            hint: "Optional: use your public LinkedIn URL.",
+            placeholder: "Example: linkedin.com/in/your-name",
+            normalize: (value) => normalizeUrl(value),
+            validate: (value) => {
+                if (!hasText(value)) {
+                    return true;
+                }
+                const linkedinRegex = /^(https?:\/\/)?(www\.)?linkedin\.com\/.+/i;
+                return linkedinRegex.test(value.trim()) || "Enter a valid LinkedIn profile URL.";
+            }
+        });
+    }
+
+    if (!hasText(data?.github)) {
+        questions.push({
+            key: "github",
+            path: "github",
+            question: "What is your GitHub profile link?",
+            hint: "Optional: use your profile URL (not a repository URL if possible).",
+            placeholder: "Example: github.com/your-username",
+            normalize: (value) => normalizeUrl(value),
+            validate: (value) => {
+                if (!hasText(value)) {
+                    return true;
+                }
+                const githubRegex = /^(https?:\/\/)?(www\.)?github\.com\/.+/i;
+                return githubRegex.test(value.trim()) || "Enter a valid GitHub profile URL.";
+            }
+        });
+    }
+
     const experienceList = Array.isArray(data?.experience) ? data.experience : [];
     experienceList.forEach((item, idx) => {
         const role = hasText(item?.role) ? item.role.trim() : "this role";
@@ -389,7 +438,8 @@ async function saveMissingDetails() {
 
 async function onMissingNext() {
     const current = missingQuestions[missingIndex];
-    const value = missingAnswerInput.value.trim();
+    const rawValue = missingAnswerInput.value.trim();
+    const value = current.normalize ? current.normalize(rawValue) : rawValue;
 
     const validation = current.validate(value);
     if (validation !== true) {
@@ -397,6 +447,7 @@ async function onMissingNext() {
         return;
     }
 
+    missingAnswerInput.value = value;
     setPathValue(workingResumeData, current.path, value);
 
     if (missingIndex === missingQuestions.length - 1) {
