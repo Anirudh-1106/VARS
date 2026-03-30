@@ -482,6 +482,12 @@
             color: var(--text);
         }
 
+        .missing-btn.voice.recording {
+            background: rgba(239, 68, 68, 0.18);
+            border-color: rgba(239, 68, 68, 0.55);
+            color: #ffd7d7;
+        }
+
         /* ── Generate Button ── */
         .generate-btn {
             display: none;
@@ -600,6 +606,7 @@
             <div class="missing-actions">
                 <button type="button" id="missingBackBtn" class="missing-btn ghost">Back</button>
                 <button type="button" id="missingSkipBtn" class="missing-btn ghost">Skip</button>
+                <button type="button" id="missingVoiceBtn" class="missing-btn ghost voice">Answer by Voice</button>
                 <button type="button" id="missingNextBtn" class="missing-btn primary">Next</button>
             </div>
         </div>
@@ -619,7 +626,7 @@
     VARS &mdash; Voice-based AI Resume System &bull; Powered by Whisper &amp; LLaMA
 </footer>
 
-<script src="/static/recorder.js?v=5"></script>
+<script src="/static/recorder.js?v=6"></script>
 
 </body>
 </html>

@@ -20,6 +20,7 @@ const missingErrorText = document.getElementById("missingErrorText");
 const missingBackBtn = document.getElementById("missingBackBtn");
 const missingSkipBtn = document.getElementById("missingSkipBtn");
 const missingNextBtn = document.getElementById("missingNextBtn");
+const missingVoiceBtn = document.getElementById("missingVoiceBtn");
 
 const drawCtx = orbCanvas.getContext("2d", { alpha: true });
 
@@ -38,6 +39,10 @@ let pendingTranscript = "";
 let workingResumeData = null;
 let missingQuestions = [];
 let missingIndex = 0;
+let voiceAnswerRecorder = null;
+let voiceAnswerChunks = [];
+let voiceAnswerStream = null;
+let isVoiceAnswerRecording = false;
 
 const STATE = {
     IDLE: "idle",
@@ -79,11 +84,130 @@ function toggleMissingPanel(show) {
 }
 
 function setMissingButtonsDisabled(disabled) {
-    [missingBackBtn, missingSkipBtn, missingNextBtn].forEach((btn) => {
+    [missingBackBtn, missingSkipBtn, missingNextBtn, missingVoiceBtn].forEach((btn) => {
         if (btn) {
             btn.disabled = disabled;
         }
     });
+}
+
+function setVoiceButtonRecording(isRecording) {
+    if (!missingVoiceBtn) {
+        return;
+    }
+
+    if (isRecording) {
+        missingVoiceBtn.classList.add("recording");
+        missingVoiceBtn.textContent = "Stop Voice Input";
+    } else {
+        missingVoiceBtn.classList.remove("recording");
+        missingVoiceBtn.textContent = "Answer by Voice";
+    }
+}
+
+function cleanupVoiceAnswerStream() {
+    if (voiceAnswerStream) {
+        voiceAnswerStream.getTracks().forEach((track) => track.stop());
+        voiceAnswerStream = null;
+    }
+}
+
+async function transcribeAnswerBlob(audioBlob) {
+    const formData = new FormData();
+    formData.append("audio", audioBlob);
+
+    const response = await fetch("/transcribe", {
+        method: "POST",
+        body: formData
+    });
+    const data = await response.json();
+
+    if (!response.ok || data.error) {
+        throw new Error(data.error || "Unable to transcribe voice answer");
+    }
+
+    return (data.translation || "").trim();
+}
+
+async function startVoiceAnswerRecording() {
+    if (isVoiceAnswerRecording) {
+        return;
+    }
+
+    try {
+        setMissingButtonsDisabled(true);
+        missingVoiceBtn.disabled = false;
+        missingAnswerInput.disabled = true;
+        missingErrorText.textContent = "";
+
+        voiceAnswerStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        voiceAnswerRecorder = new MediaRecorder(voiceAnswerStream);
+        voiceAnswerChunks = [];
+
+        voiceAnswerRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                voiceAnswerChunks.push(event.data);
+            }
+        };
+
+        voiceAnswerRecorder.onstop = async () => {
+            isVoiceAnswerRecording = false;
+            setVoiceButtonRecording(false);
+            handleStateChange(STATE.PROCESSING);
+            setStatus("Transcribing answer...", "processing");
+
+            try {
+                const audioBlob = new Blob(voiceAnswerChunks, { type: "audio/webm" });
+                if (!audioBlob.size) {
+                    throw new Error("No audio captured");
+                }
+
+                const transcript = await transcribeAnswerBlob(audioBlob);
+                if (!transcript) {
+                    throw new Error("No speech detected");
+                }
+
+                missingAnswerInput.value = transcript;
+                setStatus("Voice answer captured", "done");
+                missingErrorText.textContent = "";
+            } catch (error) {
+                console.error("Voice answer error:", error);
+                setStatus("Voice answer failed", "error");
+                missingErrorText.textContent = error.message || "Unable to capture voice answer.";
+            }
+
+            cleanupVoiceAnswerStream();
+            voiceAnswerRecorder = null;
+            voiceAnswerChunks = [];
+            handleStateChange(STATE.IDLE);
+            setMissingButtonsDisabled(false);
+            missingAnswerInput.disabled = false;
+            missingAnswerInput.focus();
+        };
+
+        voiceAnswerRecorder.start();
+        isVoiceAnswerRecording = true;
+        setVoiceButtonRecording(true);
+        handleStateChange(STATE.RECORDING);
+        setStatus("Listening for answer...", "recording");
+    } catch (error) {
+        console.error("Voice record start error:", error);
+        cleanupVoiceAnswerStream();
+        voiceAnswerRecorder = null;
+        voiceAnswerChunks = [];
+        isVoiceAnswerRecording = false;
+        setVoiceButtonRecording(false);
+        handleStateChange(STATE.IDLE);
+        setStatus("Microphone permission denied", "error");
+        setMissingButtonsDisabled(false);
+        missingAnswerInput.disabled = false;
+    }
+}
+
+function stopVoiceAnswerRecording() {
+    if (voiceAnswerRecorder && voiceAnswerRecorder.state === "recording") {
+        voiceAnswerRecorder.stop();
+    }
 }
 
 function getPathValue(obj, path) {
@@ -206,6 +330,8 @@ function renderMissingQuestion() {
     missingErrorText.textContent = "";
     missingBackBtn.disabled = missingIndex === 0;
     missingNextBtn.textContent = missingIndex === total - 1 ? "Save & Finish" : "Next";
+    setVoiceButtonRecording(false);
+    missingAnswerInput.disabled = false;
 
     missingAnswerInput.focus();
 }
@@ -465,6 +591,9 @@ function drawVisualizer(now) {
 
 async function startRecording() {
     try {
+        if (isVoiceAnswerRecording) {
+            stopVoiceAnswerRecording();
+        }
         toggleMissingPanel(false);
         await initAudio();
 
@@ -598,6 +727,9 @@ confirmTranscriptBtn.addEventListener("click", async () => {
 });
 
 retryTranscriptBtn.addEventListener("click", async () => {
+    if (isVoiceAnswerRecording) {
+        stopVoiceAnswerRecording();
+    }
     toggleReviewPanel(false);
     toggleMissingPanel(false);
     transcriptPanel.classList.remove("visible");
@@ -627,6 +759,14 @@ missingBackBtn.addEventListener("click", () => {
     onMissingBack();
 });
 
+missingVoiceBtn.addEventListener("click", async () => {
+    if (isVoiceAnswerRecording) {
+        stopVoiceAnswerRecording();
+    } else {
+        await startVoiceAnswerRecording();
+    }
+});
+
 missingAnswerInput.addEventListener("keydown", async (event) => {
     if (event.key === "Enter") {
         event.preventDefault();
@@ -642,6 +782,7 @@ window.addEventListener("beforeunload", () => {
     if (stream) {
         stream.getTracks().forEach((track) => track.stop());
     }
+    cleanupVoiceAnswerStream();
     if (audioCtx && audioCtx.state !== "closed") {
         audioCtx.close();
     }
