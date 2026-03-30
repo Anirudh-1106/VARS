@@ -9,6 +9,7 @@ import subprocess
 from transformers import pipeline
 import time
 import random
+import re
 
 app = Flask(__name__)
 resume_state = ResumeState()
@@ -31,6 +32,33 @@ FALLBACK_SKILLS = [
     "Communication",
     "Time Management",
 ]
+
+MONTH_INDEX = {
+    "jan": 1,
+    "january": 1,
+    "feb": 2,
+    "february": 2,
+    "mar": 3,
+    "march": 3,
+    "apr": 4,
+    "april": 4,
+    "may": 5,
+    "jun": 6,
+    "june": 6,
+    "jul": 7,
+    "july": 7,
+    "aug": 8,
+    "august": 8,
+    "sep": 9,
+    "sept": 9,
+    "september": 9,
+    "oct": 10,
+    "october": 10,
+    "nov": 11,
+    "november": 11,
+    "dec": 12,
+    "december": 12,
+}
 
 
 def normalize_skills(skills):
@@ -73,6 +101,63 @@ def normalize_skills(skills):
         normalized = random.sample(FALLBACK_SKILLS, count)
 
     return normalized
+
+
+def _parse_year_month(segment: str, default_month: int):
+    if not isinstance(segment, str):
+        return None, default_month
+
+    lowered = segment.lower()
+    years = re.findall(r"\b(?:19|20)\d{2}\b", lowered)
+    year = int(years[-1]) if years else None
+
+    month = None
+    for label, number in MONTH_INDEX.items():
+        if re.search(rf"\b{label}\b", lowered):
+            month = number
+            break
+
+    return year, month if month is not None else default_month
+
+
+def _experience_sort_key(experience_item: dict):
+    duration = (experience_item or {}).get("duration")
+    if not isinstance(duration, str) or not duration.strip():
+        return (0, 0, 0, 0, 0)
+
+    text = duration.strip().lower()
+    parts = re.split(r"\s*(?:-|–|—|to)\s*", text, maxsplit=1)
+
+    present_keywords = {"present", "current", "now", "ongoing", "till now", "till date"}
+    is_current = any(keyword in text for keyword in present_keywords)
+
+    if len(parts) == 2:
+        start_year, start_month = _parse_year_month(parts[0], 1)
+        end_year, end_month = _parse_year_month(parts[1], 12)
+    else:
+        start_year, start_month = _parse_year_month(text, 1)
+        end_year, end_month = _parse_year_month(text, 12)
+
+    if is_current:
+        end_year, end_month = 9999, 12
+
+    has_date = 1 if end_year is not None else 0
+    return (
+        has_date,
+        end_year or 0,
+        end_month or 0,
+        start_year or 0,
+        start_month or 0,
+    )
+
+
+def normalize_experience_order(experience):
+    """Sort experience entries by most recent duration first."""
+    if not isinstance(experience, list):
+        return []
+
+    normalized = [item for item in experience if isinstance(item, dict)]
+    return sorted(normalized, key=_experience_sort_key, reverse=True)
 
 
 def get_model():
@@ -202,6 +287,7 @@ def process_transcript():
 
             updated = modify_resume_data(current_data, transcript)
             updated["skills"] = normalize_skills(updated.get("skills", []))
+            updated["experience"] = normalize_experience_order(updated.get("experience", []))
             resume_state.update(updated, replace_lists=True)
             return jsonify({
                 "message": "Resume updated as per your instruction.",
@@ -211,6 +297,7 @@ def process_transcript():
         else:
             extracted = extract_resume_data(transcript)
             extracted["skills"] = normalize_skills(extracted.get("skills", []))
+            extracted["experience"] = normalize_experience_order(extracted.get("experience", []))
             resume_state.update(extracted)
             return jsonify({
                 "message": "Resume data extracted and saved.",
@@ -236,6 +323,7 @@ def generate_resume():
             print(f"Refinement warning: {refine_error}")
             refined = raw_data
         refined["skills"] = normalize_skills(refined.get("skills", []))
+        refined["experience"] = normalize_experience_order(refined.get("experience", []))
         resume_state.update(refined, replace_lists=True)
         return render_template("resume.html", resume=resume_state.get_resume_data())
     except ValueError as e:
@@ -251,6 +339,7 @@ def save_resume():
     payload = request.get_json(force=True)
     if not payload:
         return jsonify({"error": "No data provided"}), 400
+    payload["experience"] = normalize_experience_order(payload.get("experience", []))
     resume_state.update(payload, replace_lists=True)
     return jsonify({"message": "Resume saved.", "data": resume_state.get_resume_data()})
 
