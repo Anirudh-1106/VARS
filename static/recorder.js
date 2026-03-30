@@ -5,6 +5,11 @@ const transcriptBox = document.getElementById("transcriptBox");
 const transcriptPanel = document.getElementById("transcriptPanel");
 const orbStateText = document.getElementById("orbStateText");
 const orbCanvas = document.getElementById("orbCanvas");
+const reviewPanel = document.getElementById("reviewPanel");
+const reviewTranscript = document.getElementById("reviewTranscript");
+const confirmTranscriptBtn = document.getElementById("confirmTranscriptBtn");
+const retryTranscriptBtn = document.getElementById("retryTranscriptBtn");
+const cancelReviewBtn = document.getElementById("cancelReviewBtn");
 
 const drawCtx = orbCanvas.getContext("2d", { alpha: true });
 
@@ -19,6 +24,7 @@ let animationId = null;
 let state = "idle";
 let phase = 0;
 let smoothEnergy = 0;
+let pendingTranscript = "";
 
 const STATE = {
     IDLE: "idle",
@@ -29,6 +35,22 @@ const STATE = {
 function setStatus(text, statusClass) {
     statusText.textContent = text;
     statusDot.className = "status-dot " + (statusClass || "");
+}
+
+function toggleReviewPanel(show) {
+    if (!reviewPanel) {
+        return;
+    }
+
+    reviewPanel.classList.toggle("visible", show);
+}
+
+function setReviewButtonsDisabled(disabled) {
+    [confirmTranscriptBtn, retryTranscriptBtn, cancelReviewBtn].forEach((btn) => {
+        if (btn) {
+            btn.disabled = disabled;
+        }
+    });
 }
 
 function handleStateChange(nextState) {
@@ -227,37 +249,12 @@ async function startRecording() {
                 const data = await response.json();
 
                 if (data.translation) {
-                    transcriptBox.textContent = data.translation;
-                    transcriptPanel.classList.add("visible");
-                    setStatus("Analyzing...", "processing");
-
-                    try {
-                        const llmResponse = await fetch("/process-transcript", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ transcript: data.translation })
-                        });
-                        const llmData = await llmResponse.json();
-
-                        if (llmData.error) {
-                            setStatus(llmData.error, "error");
-                        } else if (llmData.action === "modify") {
-                            setStatus("Resume updated successfully", "done");
-                            const genBtn = document.getElementById("generateBtn");
-                            if (genBtn) {
-                                genBtn.style.display = "inline-flex";
-                            }
-                        } else {
-                            setStatus("Data extracted - record more or generate", "done");
-                            const genBtn = document.getElementById("generateBtn");
-                            if (genBtn) {
-                                genBtn.style.display = "inline-flex";
-                            }
-                        }
-                    } catch (llmError) {
-                        console.error("LLM error:", llmError);
-                        setStatus("Extraction error - try again", "error");
-                    }
+                    pendingTranscript = data.translation;
+                    reviewTranscript.value = data.translation;
+                    toggleReviewPanel(true);
+                    setReviewButtonsDisabled(false);
+                    setStatus("Review transcript", "done");
+                    transcriptPanel.classList.remove("visible");
                 } else {
                     setStatus("No speech detected", "error");
                 }
@@ -289,12 +286,85 @@ function stopRecording() {
     }
 }
 
+async function processConfirmedTranscript() {
+    const transcript = reviewTranscript.value.trim();
+
+    if (!transcript) {
+        setStatus("Transcript is empty", "error");
+        return;
+    }
+
+    pendingTranscript = transcript;
+    handleStateChange(STATE.PROCESSING);
+    setStatus("Analyzing...", "processing");
+    setReviewButtonsDisabled(true);
+
+    try {
+        const llmResponse = await fetch("/process-transcript", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ transcript })
+        });
+        const llmData = await llmResponse.json();
+
+        transcriptBox.textContent = transcript;
+        transcriptPanel.classList.add("visible");
+
+        if (llmData.error) {
+            setStatus(llmData.error, "error");
+        } else if (llmData.action === "modify") {
+            setStatus("Resume updated successfully", "done");
+            const genBtn = document.getElementById("generateBtn");
+            if (genBtn) {
+                genBtn.style.display = "inline-flex";
+            }
+            toggleReviewPanel(false);
+        } else {
+            setStatus("Data extracted - record more or generate", "done");
+            const genBtn = document.getElementById("generateBtn");
+            if (genBtn) {
+                genBtn.style.display = "inline-flex";
+            }
+            toggleReviewPanel(false);
+        }
+    } catch (llmError) {
+        console.error("LLM error:", llmError);
+        setStatus("Extraction error - try again", "error");
+        setReviewButtonsDisabled(false);
+    }
+
+    handleStateChange(STATE.IDLE);
+}
+
 recordBtn.addEventListener("click", async () => {
     if (state === STATE.RECORDING) {
         stopRecording();
     } else {
         await startRecording();
     }
+});
+
+confirmTranscriptBtn.addEventListener("click", async () => {
+    confirmTranscriptBtn.textContent = "Processing...";
+    await processConfirmedTranscript();
+    confirmTranscriptBtn.textContent = "Confirm & Process";
+});
+
+retryTranscriptBtn.addEventListener("click", async () => {
+    toggleReviewPanel(false);
+    transcriptPanel.classList.remove("visible");
+    pendingTranscript = "";
+    reviewTranscript.value = "";
+    setStatus("Recording...", "recording");
+    await startRecording();
+});
+
+cancelReviewBtn.addEventListener("click", () => {
+    toggleReviewPanel(false);
+    pendingTranscript = "";
+    reviewTranscript.value = "";
+    setStatus("Ready", "");
+    handleStateChange(STATE.IDLE);
 });
 
 window.addEventListener("resize", resizeCanvas, { passive: true });
@@ -313,4 +383,5 @@ window.addEventListener("beforeunload", () => {
 resizeCanvas();
 handleStateChange(STATE.IDLE);
 setStatus("Ready", "");
+toggleReviewPanel(false);
 animationId = requestAnimationFrame(drawVisualizer);

@@ -284,6 +284,85 @@
             font-size: 0.9rem;
             color: var(--text-secondary);
             line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* ── Transcript Review ── */
+        .review-panel {
+            width: 100%;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 18px;
+            display: none;
+        }
+
+        .review-panel.visible { display: block; }
+
+        .review-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .review-input {
+            width: 100%;
+            min-height: 112px;
+            resize: vertical;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(11, 15, 26, 0.72);
+            color: var(--text);
+            padding: 12px 14px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            line-height: 1.55;
+            outline: none;
+        }
+
+        .review-input:focus {
+            border-color: rgba(0, 240, 255, 0.55);
+            box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.12);
+        }
+
+        .review-actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .review-btn {
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 9px;
+            padding: 10px 14px;
+            font-size: 0.86rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.2s ease;
+        }
+
+        .review-btn:hover { transform: translateY(-1px); }
+        .review-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+        .review-btn.confirm {
+            background: linear-gradient(135deg, var(--accent), #00b7e7);
+            color: #031219;
+            border-color: transparent;
+        }
+
+        .review-btn.retry {
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+        }
+
+        .review-btn.cancel {
+            background: transparent;
+            color: var(--text-secondary);
         }
 
         /* ── Generate Button ── */
@@ -334,6 +413,8 @@
             .record-btn.recording::before { inset: 21px; }
             .orb-state { bottom: -32px; }
             .status-bar { margin-top: 16px; font-size: 0.92rem; }
+            .review-actions { flex-direction: column; }
+            .review-btn { width: 100%; }
         }
     </style>
 </head>
@@ -371,6 +452,17 @@
         </div>
 
         <!-- Transcript -->
+        <div class="review-panel" id="reviewPanel">
+            <div class="review-label">Review Transcript</div>
+            <textarea id="reviewTranscript" class="review-input" placeholder="Your transcript will appear here after recording..."></textarea>
+            <div class="review-actions">
+                <button type="button" id="confirmTranscriptBtn" class="review-btn confirm">Confirm & Process</button>
+                <button type="button" id="retryTranscriptBtn" class="review-btn retry">Retry Recording</button>
+                <button type="button" id="cancelReviewBtn" class="review-btn cancel">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Transcript -->
         <div class="transcript-panel" id="transcriptPanel">
             <div class="transcript-label">Transcription</div>
             <div class="transcript-text" id="transcriptBox"></div>
@@ -391,7 +483,7 @@
     VARS &mdash; Voice-based AI Resume System &bull; Powered by Whisper &amp; LLaMA
 </footer>
 
-<script src="/static/recorder.js?v=3"></script>
+<script src="/static/recorder.js?v=4"></script>
 
 </body>
 </html>
