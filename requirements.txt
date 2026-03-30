@@ -1,0 +1,11 @@
+flask>=3.0.0
+python-dotenv>=1.0.0
+
+# LLM orchestration
+langchain-groq>=0.2.0
+
+# Speech transcription/translation pipeline
+torch>=2.2.0
+transformers>=4.41.0
+accelerate>=0.30.0
+sentencepiece>=0.2.0
