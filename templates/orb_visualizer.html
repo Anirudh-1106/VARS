@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orb Voice Visualizer</title>
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --neon: #00f0ff;
+      --text: #c9f7ff;
+      --btn-stop: #ff4d6d;
+      --btn-start: #11d4ff;
+      --orb-size: min(66vw, 430px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 38%, #121c2f 0%, var(--bg) 55%, #070a12 100%);
+      color: var(--text);
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      overflow: hidden;
+    }
+
+    .scene {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      position: relative;
+      padding: 24px;
+    }
+
+    .orb-wrap {
+      width: var(--orb-size);
+      aspect-ratio: 1;
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    #visualizer {
+      width: 100%;
+      height: 100%;
+      display: block;
+      filter: drop-shadow(0 0 22px rgba(0, 240, 255, 0.45));
+    }
+
+    #recordToggle {
+      position: absolute;
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 240, 255, 0.65);
+      background: radial-gradient(circle at 30% 30%, rgba(45, 255, 255, 0.4), rgba(0, 0, 0, 0.3));
+      box-shadow:
+        0 0 0 1px rgba(0, 240, 255, 0.12) inset,
+        0 0 22px rgba(0, 240, 255, 0.5),
+        0 0 48px rgba(0, 140, 255, 0.25);
+      backdrop-filter: blur(3px);
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 200ms ease, border-color 200ms ease;
+    }
+
+    #recordToggle::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: 50%;
+      background: var(--btn-start);
+      box-shadow: 0 0 16px rgba(17, 212, 255, 0.8);
+      transition: all 180ms ease;
+    }
+
+    #recordToggle.recording::before {
+      inset: 24px;
+      border-radius: 10px;
+      background: var(--btn-stop);
+      box-shadow: 0 0 16px rgba(255, 77, 109, 0.9);
+    }
+
+    #recordToggle:hover {
+      transform: scale(1.05);
+    }
+
+    #recordToggle:active {
+      transform: scale(0.97);
+    }
+
+    .status {
+      position: absolute;
+      bottom: -42px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: clamp(16px, 2vw, 20px);
+      letter-spacing: 0.08em;
+      color: rgba(201, 247, 255, 0.95);
+      text-shadow: 0 0 14px rgba(0, 240, 255, 0.45);
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 560px) {
+      #recordToggle {
+        width: 74px;
+        height: 74px;
+      }
+
+      #recordToggle::before {
+        inset: 15px;
+      }
+
+      #recordToggle.recording::before {
+        inset: 21px;
+      }
+
+      .status {
+        bottom: -36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene">
+    <div class="orb-wrap">
+      <canvas id="visualizer" aria-label="Audio visualizer"></canvas>
+      <button id="recordToggle" aria-label="Start recording"></button>
+      <p id="statusText" class="status">Tap to start</p>
+    </div>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("visualizer");
+    const ctx = canvas.getContext("2d", { alpha: true });
+    const toggleButton = document.getElementById("recordToggle");
+    const statusText = document.getElementById("statusText");
+
+    let audioContext = null;
+    let analyser = null;
+    let mediaStream = null;
+    let sourceNode = null;
+    let frequencyData = null;
+
+    let state = "idle";
+    let frameId = null;
+    let processingTimeout = null;
+    let smoothEnergy = 0;
+    let previousEnergy = 0;
+    let phase = 0;
+
+    const STATE = {
+      IDLE: "idle",
+      RECORDING: "recording",
+      PROCESSING: "processing"
+    };
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const size = Math.floor(canvas.clientWidth);
+      canvas.width = Math.floor(size * dpr);
+      canvas.height = Math.floor(size * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    async function initAudio() {
+      if (audioContext && analyser) {
+        return;
+      }
+
+      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 1024;
+      analyser.smoothingTimeConstant = 0.85;
+
+      sourceNode = audioContext.createMediaStreamSource(mediaStream);
+      sourceNode.connect(analyser);
+
+      frequencyData = new Uint8Array(analyser.frequencyBinCount);
+    }
+
+    function handleStateChange(nextState) {
+      state = nextState;
+
+      if (state === STATE.RECORDING) {
+        statusText.textContent = "Listening...";
+        toggleButton.classList.add("recording");
+        toggleButton.setAttribute("aria-label", "Stop recording");
+      } else if (state === STATE.PROCESSING) {
+        statusText.textContent = "Processing...";
+        toggleButton.classList.remove("recording");
+        toggleButton.setAttribute("aria-label", "Processing audio");
+      } else {
+        statusText.textContent = "Tap to start";
+        toggleButton.classList.remove("recording");
+        toggleButton.setAttribute("aria-label", "Start recording");
+      }
+    }
+
+    function getAudioEnergy() {
+      if (state !== STATE.RECORDING || !analyser || !frequencyData) {
+        return 0;
+      }
+
+      analyser.getByteFrequencyData(frequencyData);
+
+      let sum = 0;
+      const sampleCount = Math.min(frequencyData.length, 220);
+      for (let i = 0; i < sampleCount; i += 1) {
+        sum += frequencyData[i];
+      }
+
+      return (sum / sampleCount) / 255;
+    }
+
+    function drawRing(centerX, centerY, baseRadius, energy, elapsed) {
+      const points = 200;
+      const twoPi = Math.PI * 2;
+      const noiseScale = state === STATE.RECORDING ? 34 : state === STATE.PROCESSING ? 10 : 6;
+      const idleBreathe = Math.sin(elapsed * (state === STATE.PROCESSING ? 1.2 : 2.2)) * (state === STATE.PROCESSING ? 6 : 4);
+      const amplitudeBoost = noiseScale * (0.2 + energy * 1.3);
+
+      ctx.beginPath();
+      for (let i = 0; i <= points; i += 1) {
+        const t = (i / points) * twoPi;
+        const binIndex = Math.floor((i / points) * (frequencyData ? frequencyData.length : 0));
+        const raw = frequencyData && state === STATE.RECORDING ? frequencyData[binIndex] / 255 : 0;
+
+        const wobbleA = Math.sin(t * 3 + phase) * 0.55;
+        const wobbleB = Math.sin(t * 7 - phase * 0.7) * 0.45;
+        const audioOffset = raw * amplitudeBoost;
+        const radialOffset = idleBreathe + (wobbleA + wobbleB) * (state === STATE.RECORDING ? 10 : 5) + audioOffset;
+
+        const r = baseRadius + radialOffset;
+        const x = centerX + Math.cos(t) * r;
+        const y = centerY + Math.sin(t) * r;
+
+        if (i === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          const prevT = ((i - 1) / points) * twoPi;
+          const prevBin = Math.floor(((i - 1) / points) * (frequencyData ? frequencyData.length : 0));
+          const prevRaw = frequencyData && state === STATE.RECORDING ? frequencyData[prevBin] / 255 : 0;
+          const prevWobbleA = Math.sin(prevT * 3 + phase) * 0.55;
+          const prevWobbleB = Math.sin(prevT * 7 - phase * 0.7) * 0.45;
+          const prevOffset = idleBreathe + (prevWobbleA + prevWobbleB) * (state === STATE.RECORDING ? 10 : 5) + prevRaw * amplitudeBoost;
+          const prevR = baseRadius + prevOffset;
+          const prevX = centerX + Math.cos(prevT) * prevR;
+          const prevY = centerY + Math.sin(prevT) * prevR;
+          const cpx = (prevX + x) * 0.5;
+          const cpy = (prevY + y) * 0.5;
+          ctx.quadraticCurveTo(prevX, prevY, cpx, cpy);
+        }
+      }
+      ctx.closePath();
+    }
+
+    function drawVisualizer(now) {
+      if (!ctx) {
+        return;
+      }
+
+      const elapsed = now * 0.001;
+      const size = canvas.clientWidth;
+      const cx = size / 2;
+      const cy = size / 2;
+
+      const energy = getAudioEnergy();
+      smoothEnergy += (energy - smoothEnergy) * 0.12;
+      previousEnergy += (smoothEnergy - previousEnergy) * 0.08;
+      phase += state === STATE.RECORDING ? 0.065 : state === STATE.PROCESSING ? 0.028 : 0.02;
+
+      ctx.clearRect(0, 0, size, size);
+
+      const idlePulse = Math.sin(elapsed * 1.8) * 4;
+      const processingPulse = Math.sin(elapsed * 1.1) * 8;
+      const statePulse = state === STATE.RECORDING ? previousEnergy * 32 : state === STATE.PROCESSING ? processingPulse : idlePulse;
+      const baseRadius = size * 0.28 + statePulse;
+
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+
+      drawRing(cx, cy, baseRadius, previousEnergy, elapsed);
+      ctx.strokeStyle = "rgba(0, 240, 255, 0.95)";
+      ctx.lineWidth = 2.2;
+      ctx.shadowColor = "rgba(0, 240, 255, 0.95)";
+      ctx.shadowBlur = 24;
+      ctx.stroke();
+
+      drawRing(cx, cy, baseRadius - 10, previousEnergy * 0.7, elapsed + 0.3);
+      ctx.strokeStyle = "rgba(0, 180, 255, 0.52)";
+      ctx.lineWidth = 1.4;
+      ctx.shadowBlur = 16;
+      ctx.stroke();
+
+      drawRing(cx, cy, baseRadius + 9, previousEnergy * 0.55, elapsed - 0.15);
+      ctx.strokeStyle = "rgba(0, 255, 255, 0.3)";
+      ctx.lineWidth = 1;
+      ctx.shadowBlur = 12;
+      ctx.stroke();
+
+      ctx.restore();
+
+      frameId = requestAnimationFrame(drawVisualizer);
+    }
+
+    async function startRecording() {
+      try {
+        clearTimeout(processingTimeout);
+        await initAudio();
+
+        if (audioContext.state === "suspended") {
+          await audioContext.resume();
+        }
+
+        handleStateChange(STATE.RECORDING);
+      } catch (error) {
+        console.error("Microphone access failed:", error);
+        statusText.textContent = "Microphone permission required";
+      }
+    }
+
+    async function stopRecording() {
+      if (state !== STATE.RECORDING) {
+        return;
+      }
+
+      handleStateChange(STATE.PROCESSING);
+
+      if (audioContext && audioContext.state === "running") {
+        await audioContext.suspend();
+      }
+
+      processingTimeout = setTimeout(() => {
+        handleStateChange(STATE.IDLE);
+      }, 2200);
+    }
+
+    toggleButton.addEventListener("click", async () => {
+      if (state === STATE.RECORDING) {
+        await stopRecording();
+      } else {
+        await startRecording();
+      }
+    });
+
+    window.addEventListener("resize", resizeCanvas, { passive: true });
+    window.addEventListener("beforeunload", () => {
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+      }
+
+      if (mediaStream) {
+        mediaStream.getTracks().forEach((track) => track.stop());
+      }
+
+      if (audioContext && audioContext.state !== "closed") {
+        audioContext.close();
+      }
+    });
+
+    resizeCanvas();
+    handleStateChange(STATE.IDLE);
+    frameId = requestAnimationFrame(drawVisualizer);
+  </script>
+</body>
+</html>

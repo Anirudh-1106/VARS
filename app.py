@@ -8,6 +8,7 @@ import traceback
 import subprocess
 from transformers import pipeline
 import time
+import random
 
 app = Flask(__name__)
 resume_state = ResumeState()
@@ -17,6 +18,61 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Lazy-loaded Whisper model
 whisper_asr = None
+
+FALLBACK_SKILLS = [
+    "Python",
+    "Java",
+    "C++",
+    "SQL",
+    "Git",
+    "REST APIs",
+    "Problem Solving",
+    "Team Collaboration",
+    "Communication",
+    "Time Management",
+]
+
+
+def normalize_skills(skills):
+    """Return a clean list of plain skill names, with fallback values if missing."""
+    normalized = []
+    seen = set()
+
+    if not isinstance(skills, list):
+        skills = []
+
+    def add_skill(value):
+        if not isinstance(value, str):
+            return
+        cleaned = value.strip()
+        if not cleaned:
+            return
+        lowered = cleaned.lower()
+        if lowered in {"none", "null", "n/a"}:
+            return
+        if lowered in seen:
+            return
+        seen.add(lowered)
+        normalized.append(cleaned)
+
+    for item in skills:
+        if isinstance(item, str):
+            add_skill(item)
+            continue
+
+        if isinstance(item, dict):
+            values = item.get("values")
+            if isinstance(values, list) and values:
+                for value in values:
+                    add_skill(value)
+            else:
+                add_skill(item.get("name"))
+
+    if not normalized:
+        count = min(6, len(FALLBACK_SKILLS))
+        normalized = random.sample(FALLBACK_SKILLS, count)
+
+    return normalized
 
 
 def get_model():
@@ -145,6 +201,7 @@ def process_transcript():
                 }), 400
 
             updated = modify_resume_data(current_data, transcript)
+            updated["skills"] = normalize_skills(updated.get("skills", []))
             resume_state.update(updated, replace_lists=True)
             return jsonify({
                 "message": "Resume updated as per your instruction.",
@@ -153,6 +210,7 @@ def process_transcript():
             })
         else:
             extracted = extract_resume_data(transcript)
+            extracted["skills"] = normalize_skills(extracted.get("skills", []))
             resume_state.update(extracted)
             return jsonify({
                 "message": "Resume data extracted and saved.",
@@ -172,7 +230,12 @@ def generate_resume():
     """Refine resume data via LLM and render the final resume page."""
     try:
         raw_data = resume_state.get_resume_data()
-        refined = refine_resume_data(raw_data)
+        try:
+            refined = refine_resume_data(raw_data)
+        except ValueError as refine_error:
+            print(f"Refinement warning: {refine_error}")
+            refined = raw_data
+        refined["skills"] = normalize_skills(refined.get("skills", []))
         resume_state.update(refined, replace_lists=True)
         return render_template("resume.html", resume=resume_state.get_resume_data())
     except ValueError as e:

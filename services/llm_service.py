@@ -149,7 +149,7 @@ Input JSON:
 # ── Helper ────────────────────────────────────────────────────────────────────
 
 def _parse_json(text: str) -> dict:
-    """Strip markdown fences (if any) and parse JSON."""
+    """Strip wrappers and parse the best JSON object from model output."""
     cleaned = text.strip()
 
     # Remove ```json ... ``` wrappers if LLM still adds them
@@ -164,6 +164,35 @@ def _parse_json(text: str) -> dict:
     try:
         return json.loads(cleaned)
     except json.JSONDecodeError as exc:
+        decoder = json.JSONDecoder()
+        candidates = []
+
+        # Attempt to parse one or more JSON objects from noisy text.
+        idx = 0
+        length = len(cleaned)
+        while idx < length:
+            if cleaned[idx] != "{":
+                idx += 1
+                continue
+
+            try:
+                obj, end_idx = decoder.raw_decode(cleaned[idx:])
+                if isinstance(obj, dict):
+                    candidates.append(obj)
+                idx += max(end_idx, 1)
+            except json.JSONDecodeError:
+                idx += 1
+
+        if candidates:
+            # Prefer the most complete resume-like object if present.
+            expected = {"name", "email", "phone", "linkedin", "github", "summary", "education", "skills", "experience", "projects"}
+            scored = sorted(
+                candidates,
+                key=lambda item: len(expected.intersection(set(item.keys()))),
+                reverse=True,
+            )
+            return scored[0]
+
         raise ValueError(f"LLM returned invalid JSON: {exc}\nRaw output:\n{cleaned}")
 
 
