@@ -849,12 +849,7 @@
     }
 
     function goBack() {
-        history.back();
-    }
-
-    function markResumeViewed() {
-        localStorage.setItem('resumeGenerated', 'true');
-        localStorage.setItem('resumeViewedAt', new Date().toISOString());
+        window.location.href = '/';
     }
 
     function editSection(field) {
@@ -1052,7 +1047,6 @@
     }
 
     initDragAndDrop();
-    markResumeViewed();
 </script>
 
 </body>

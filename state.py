@@ -12,6 +12,7 @@ class ResumeState:
             "experience": [],
             "projects": [],
         }
+        self.resume_generated = False
 
     def update(self, new_data: dict, replace_lists: bool = False):
         for field, value in new_data.items():
@@ -43,4 +44,10 @@ class ResumeState:
     def get_resume_data(self):
         """Return a copy of the resume data dict for template rendering."""
         return dict(self.data)
+
+    def mark_resume_generated(self):
+        self.resume_generated = True
+
+    def is_resume_generated(self):
+        return self.resume_generated
 

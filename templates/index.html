@@ -570,7 +570,7 @@
         }
     </style>
 </head>
-<body>
+<body data-resume-generated="{{ 'true' if resume_generated else 'false' }}">
 
 <!-- ── Navbar ── -->
 <nav class="navbar">
@@ -662,26 +662,19 @@
 <script src="/static/recorder.js?v=8"></script>
 
 <script>
-    // Check if resume was generated and show view button
-    function updateResumeButtonVisibility() {
-        const generateBtn = document.getElementById('generateBtn');
-        const viewResumeBtn = document.getElementById('viewResumeBtn');
-        const resumeGenerated = localStorage.getItem('resumeGenerated') === 'true';
-        
-        if (generateBtn) {
-            generateBtn.style.display = resumeGenerated ? 'none' : 'flex';
-        }
-        
-        if (viewResumeBtn) {
-            viewResumeBtn.style.display = resumeGenerated ? 'flex' : 'none';
-        }
+    // Show "View Generated Resume" only after /generate-resume has been opened.
+    const resumeGenerated = document.body.dataset.resumeGenerated === 'true';
+    const generateBtn = document.getElementById('generateBtn');
+    const viewResumeBtn = document.getElementById('viewResumeBtn');
+
+    if (generateBtn) {
+        // Keep hidden on initial load; recorder flow will reveal when transcript is confirmed.
+        generateBtn.style.display = 'none';
     }
-    
-    // Update on page load
-    updateResumeButtonVisibility();
-    
-    // Listen for storage changes from other tabs/windows
-    window.addEventListener('storage', updateResumeButtonVisibility);
+
+    if (viewResumeBtn) {
+        viewResumeBtn.style.display = resumeGenerated ? 'flex' : 'none';
+    }
 </script>
 
 </body>

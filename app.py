@@ -230,7 +230,7 @@ def get_model():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", resume_generated=resume_state.is_resume_generated())
 
 
 @app.route("/transcribe", methods=["POST"])
@@ -370,6 +370,7 @@ def generate_resume():
         refined["skills"] = normalize_skills(refined.get("skills", []))
         refined["experience"] = normalize_experience_order(refined.get("experience", []))
         resume_state.update(refined, replace_lists=True)
+        resume_state.mark_resume_generated()
         return render_template("resume.html", resume=resume_state.get_resume_data())
     except ValueError as e:
         return jsonify({"error": f"Refinement failed: {e}"}), 500
