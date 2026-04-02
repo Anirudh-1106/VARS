@@ -53,6 +53,39 @@
         .contact-row a:hover { text-decoration: underline; }
         .contact-item::before { content: ''; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--text-muted); vertical-align: middle; margin-right: 8px; }
         .contact-item:first-child::before { display: none; }
+        .contact-item:has(.contact-phone)::before { display: none; }
+        .contact-editable-block { display: inline-flex; flex-direction: column; align-items: flex-start; }
+        .field-error {
+            min-height: 16px;
+            margin-top: 2px;
+            font-size: 0.72rem;
+            line-height: 1.2;
+            color: #b91c1c;
+        }
+        .field-fix {
+            display: none;
+            margin-top: 3px;
+            font-size: 0.72rem;
+            line-height: 1.2;
+            color: #92400e;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 8px;
+            padding: 4px 8px;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .field-fix button {
+            border: 0;
+            border-radius: 999px;
+            background: #f59e0b;
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            cursor: pointer;
+        }
 
         /* ── Section ── */
         .section { margin-bottom: 22px; }
@@ -77,7 +110,81 @@
         .skills-list { display: flex; flex-wrap: wrap; gap: 8px; }
         .skill-pill {
             background: var(--pill-bg); border: 1px solid var(--border); border-radius: 20px;
-            padding: 4px 14px; font-size: 0.84rem; font-weight: 500; color: var(--text-primary);
+            padding: 4px 10px; font-size: 0.84rem; font-weight: 500; color: var(--text-primary);
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .skill-pill[draggable='true'] { cursor: default; }
+        .skill-text { min-width: 56px; }
+        .skill-pill.dragging,
+        .exp-item.dragging,
+        .proj-item.dragging {
+            opacity: 0.45;
+            transform: scale(0.99);
+        }
+        .drop-target {
+            outline: 1px dashed #60a5fa;
+            outline-offset: 2px;
+        }
+        .skill-text[contenteditable='true'] {
+            background: #ffffff;
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.14);
+            cursor: text;
+            min-width: 72px;
+            border-radius: 10px;
+            padding: 2px 8px;
+        }
+        .skill-text[contenteditable='true']:empty::before {
+            content: attr(data-placeholder);
+            color: #9ca3af;
+            font-weight: 400;
+        }
+        .drag-handle {
+            border: 0;
+            background: transparent;
+            color: #9ca3af;
+            cursor: grab;
+            font-size: 0.9rem;
+            line-height: 1;
+            padding: 2px 3px;
+            border-radius: 6px;
+            user-select: none;
+            display: none;
+        }
+        .drag-handle.visible {
+            display: inline-block;
+        }
+        .drag-handle:hover {
+            color: #4b5563;
+            background: #eef2ff;
+        }
+        .exp-item .drag-handle,
+        .proj-item .drag-handle {
+            float: right;
+            margin-left: 10px;
+            margin-top: -2px;
+        }
+        .skills-toolbar {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .add-skill-btn {
+            border: 1px dashed #93c5fd;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 5px 12px;
+            cursor: pointer;
+        }
+        .add-skill-btn:hover { background: #dbeafe; }
+        .skills-note {
+            font-size: 0.78rem;
+            color: var(--text-muted);
         }
 
         /* ── Experience ── */
@@ -122,13 +229,122 @@
         .fab:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.2); }
         .fab-pdf { background: var(--accent); color: #fff; }
         .fab-back { background: var(--bg); color: var(--text-primary); border: 1px solid var(--border); }
+        .fab-undo, .fab-redo, .fab-edit {
+            display: none;
+            background: #111827;
+            color: #fff;
+            border: 1px solid #374151;
+            font-size: 0.82rem;
+            padding: 10px 18px;
+        }
+        .fab-edit {
+            display: inline-block !important;
+        }
+
+        /* ── Toast Popup ── */
+        .toast-wrap {
+            position: fixed;
+            top: 22px;
+            right: 22px;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .toast {
+            min-width: 280px;
+            max-width: 420px;
+            border-radius: 12px;
+            padding: 12px 14px;
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.16);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            animation: toastIn 0.25s ease;
+            pointer-events: auto;
+            border: 1px solid transparent;
+        }
+        .toast.error {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+        .toast.email {
+            background: linear-gradient(135deg, #fff7ed, #ffe4e6);
+            border-color: #fed7aa;
+            color: #9a3412;
+            box-shadow: 0 12px 28px rgba(194, 65, 12, 0.2);
+        }
+        .toast.phone {
+            background: linear-gradient(135deg, #ecfeff, #eef2ff);
+            border-color: #bae6fd;
+            color: #1e3a8a;
+            box-shadow: 0 12px 28px rgba(30, 64, 175, 0.18);
+        }
+        .toast.success {
+            background: #ecfdf3;
+            border-color: #a7f3d0;
+            color: #065f46;
+        }
+        .toast-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
+        .toast-message {
+            font-size: 0.84rem;
+            line-height: 1.4;
+        }
+        .toast-close {
+            border: 0;
+            background: transparent;
+            color: inherit;
+            opacity: 0.72;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            padding: 2px;
+        }
+        .toast-close:hover { opacity: 1; }
+        .toast-icon {
+            margin-right: 8px;
+            font-size: 1rem;
+            line-height: 1;
+            vertical-align: -1px;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(18px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .toast-wrap {
+                left: 12px;
+                right: 12px;
+                top: 12px;
+            }
+            .toast {
+                min-width: 0;
+                width: 100%;
+            }
+        }
 
         /* ── Print Styles ── */
         @media print {
             html { font-size: 13px; }
             body { background: #fff; }
             .resume-page { margin: 0; padding: 20mm 18mm; box-shadow: none; width: 100%; }
-            .floating-actions, .edit-btn { display: none !important; }
+            .floating-actions, .edit-btn, .drag-handle { display: none !important; }
             .section { margin-bottom: 16px; }
             .exp-item, .edu-item, .proj-item { page-break-inside: avoid; }
             a { color: #111 !important; text-decoration: none !important; }
@@ -149,10 +365,20 @@
         <h1 contenteditable="false">{{ resume.name or "Your Name" }}</h1>
         <div class="contact-row">
             {% if resume.email %}
-                <span class="contact-item" contenteditable="false">{{ resume.email }}</span>
+                <span class="contact-item contact-editable-block">
+                    <span class="contact-email" contenteditable="false">{{ resume.email }}</span>
+                    <span class="field-error" id="emailInlineError"></span>
+                    <span class="field-fix" id="emailFixRow">
+                        <span id="emailFixText"></span>
+                        <button type="button" onclick="applyEmailSuggestion()">Apply</button>
+                    </span>
+                </span>
             {% endif %}
             {% if resume.phone %}
-                <span class="contact-item" contenteditable="false">{{ resume.phone }}</span>
+                <span class="contact-item contact-editable-block">
+                    <span class="contact-phone" contenteditable="false">{{ resume.phone }}</span>
+                    <span class="field-error" id="phoneInlineError"></span>
+                </span>
             {% endif %}
             {% if resume.linkedin %}
                 <span class="contact-item"><a href="{{ resume.linkedin }}" target="_blank">LinkedIn</a></span>
@@ -168,7 +394,6 @@
     <section class="section" id="section-summary">
         <div class="section-header">
             <span class="section-title">Summary</span>
-            <button class="edit-btn" onclick="editSection('summary')">Edit</button>
         </div>
         <p class="summary-text" contenteditable="false">{{ resume.summary }}</p>
     </section>
@@ -179,12 +404,20 @@
     <section class="section" id="section-skills">
         <div class="section-header">
             <span class="section-title">Skills</span>
-            <button class="edit-btn" onclick="editSection('skills')">Edit</button>
         </div>
-        <div class="skills-list">
+        <div class="skills-list" id="skillsList">
             {% for skill in resume.skills %}
-                {% if skill and skill != 'None' %}<span class="skill-pill">{{ skill }}</span>{% endif %}
+                {% if skill and skill != 'None' %}
+                    <span class="skill-pill" draggable="false">
+                        <button type="button" class="drag-handle" data-drag-handle="1" aria-label="Drag skill">&#8942;&#8942;</button>
+                        <span class="skill-text" contenteditable="false" data-placeholder="Type a skill">{{ skill }}</span>
+                    </span>
+                {% endif %}
             {% endfor %}
+        </div>
+        <div class="skills-toolbar" id="skillsToolbar">
+            <button type="button" class="add-skill-btn" onclick="addSkillPill()">+ Add Skill</button>
+            <span class="skills-note">Click any skill to edit. Empty skills are removed automatically.</span>
         </div>
     </section>
     {% endif %}
@@ -194,11 +427,12 @@
     <section class="section" id="section-experience">
         <div class="section-header">
             <span class="section-title">Experience</span>
-            <button class="edit-btn" onclick="editSection('experience')">Edit</button>
         </div>
+        <div id="experienceList">
         {% for exp in resume.experience %}
         {% if exp.role or exp.company %}
         <div class="exp-item">
+            <button type="button" class="drag-handle" data-drag-handle="1" aria-label="Drag experience">&#8942;&#8942;</button>
             <div class="exp-top">
                 <div>
                     {% if exp.role and exp.role != 'None' %}<span class="exp-role" contenteditable="false">{{ exp.role }}</span>{% endif %}
@@ -216,6 +450,7 @@
         </div>
         {% endif %}
         {% endfor %}
+        </div>
     </section>
     {% endif %}
 
@@ -224,7 +459,6 @@
     <section class="section" id="section-education">
         <div class="section-header">
             <span class="section-title">Education</span>
-            <button class="edit-btn" onclick="editSection('education')">Edit</button>
         </div>
         {% for edu in resume.education %}
         {% if edu.degree or edu.institution %}
@@ -245,11 +479,12 @@
     <section class="section" id="section-projects">
         <div class="section-header">
             <span class="section-title">Projects</span>
-            <button class="edit-btn" onclick="editSection('projects')">Edit</button>
         </div>
+        <div id="projectsList">
         {% for proj in resume.projects %}
         {% if proj.name and proj.name != 'None' %}
         <div class="proj-item">
+            <button type="button" class="drag-handle" data-drag-handle="1" aria-label="Drag project">&#8942;&#8942;</button>
             <span class="proj-name" contenteditable="false">{{ proj.name }}</span>
             {% if proj.description and proj.description != 'None' %}<p class="proj-desc" contenteditable="false">{{ proj.description }}</p>{% endif %}
             {% if proj.tech_stack %}
@@ -262,6 +497,7 @@
         </div>
         {% endif %}
         {% endfor %}
+        </div>
     </section>
     {% endif %}
 
@@ -270,16 +506,362 @@
 <!-- ══ FLOATING BUTTONS (screen only) ══ -->
 <div class="floating-actions">
     <button class="fab fab-pdf" onclick="downloadPDF()">&#128196; Download PDF</button>
+    <button class="fab fab-edit" id="editBtn" onclick="editSection('')" style="background: #2563eb; color: #fff;">✏️ Edit</button>
+    <button class="fab fab-undo" id="undoBtn" onclick="undoEdit()">Undo</button>
+    <button class="fab fab-redo" id="redoBtn" onclick="redoEdit()">Redo</button>
     <button class="fab fab-save" id="saveBtn" style="display:none; background:#16a34a; color:#fff;" onclick="saveEdits()">&#128190; Save Changes</button>
-    <button class="fab fab-back" onclick="window.location.href='/'">&#8592; Back</button>
+    <button class="fab fab-back" onclick="goBack()">&#8592; Back</button>
 </div>
+
+<div id="toastWrap" class="toast-wrap"></div>
 
 <script>
     let editingMode = false;
+    let suggestedEmail = '';
+    let contactValidationBound = false;
+    let draggedElement = null;
+    let dragArmedElement = null;
+
+    function showToast(message, type = 'error', title = '') {
+        const wrap = document.getElementById('toastWrap');
+        if (!wrap) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+
+        const titleText = title || (type === 'success' ? 'Success' : 'Validation Error');
+        let icon = '&#9888;';
+        if (type === 'email') icon = '&#9993;';
+        if (type === 'phone') icon = '&#128222;';
+        if (type === 'success') icon = '&#10004;';
+        toast.innerHTML = `
+            <div>
+                <div class="toast-title"><span class="toast-icon">${icon}</span>${titleText}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close" aria-label="Close">&times;</button>
+        `;
+
+        const removeToast = () => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        };
+
+        toast.querySelector('.toast-close').addEventListener('click', removeToast);
+        wrap.appendChild(toast);
+        setTimeout(removeToast, 4200);
+    }
+
+    function isValidEmail(email) {
+        const value = (email || '').trim();
+        if (!value) return true;
+        if (!value.includes('@')) return false;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(value);
+    }
+
+    function normalizeSpokenEmail(email) {
+        let value = (email || '').trim();
+        if (!value) return value;
+
+        value = value
+            .replace(/\s*\(at\)\s*/gi, '@')
+            .replace(/\s+at\s+the\s+rate\s+of\s+/gi, '@')
+            .replace(/\s+at\s+the\s+rate\s+/gi, '@')
+            .replace(/\s+at\s+/gi, '@')
+            .replace(/\s+dot\s+/gi, '.')
+            .replace(/\s+underscore\s+/gi, '_')
+            .replace(/\s+dash\s+/gi, '-')
+            .replace(/\s+/g, '');
+
+        return value;
+    }
+
+    function isValidPhone(phone) {
+        const value = (phone || '').trim();
+        if (!value) return true;
+        if (!/^\+?[\d\s\-()]+$/.test(value)) return false;
+        const digits = value.replace(/\D/g, '');
+        return digits.length >= 10 && digits.length <= 15;
+    }
+
+    function getContactElements() {
+        return {
+            emailNode: document.querySelector('.contact-email'),
+            phoneNode: document.querySelector('.contact-phone'),
+            emailErr: document.getElementById('emailInlineError'),
+            phoneErr: document.getElementById('phoneInlineError'),
+            emailFixRow: document.getElementById('emailFixRow'),
+            emailFixText: document.getElementById('emailFixText')
+        };
+    }
+
+    function validateContactsInline() {
+        const { emailNode, phoneNode, emailErr, phoneErr, emailFixRow, emailFixText } = getContactElements();
+        let valid = true;
+
+        if (emailNode && emailErr) {
+            const rawEmail = emailNode.textContent.trim();
+            const normalized = normalizeSpokenEmail(rawEmail);
+            const hasEmail = rawEmail.length > 0;
+            const emailOk = !hasEmail || isValidEmail(rawEmail);
+
+            emailErr.textContent = emailOk ? '' : 'Enter valid email (example: name@example.com)';
+            if (!emailOk) valid = false;
+
+            const canSuggest = hasEmail && !emailOk && normalized !== rawEmail && isValidEmail(normalized);
+            suggestedEmail = canSuggest ? normalized : '';
+
+            if (emailFixRow && emailFixText) {
+                emailFixRow.style.display = canSuggest ? 'inline-flex' : 'none';
+                emailFixText.textContent = canSuggest ? `Suggested: ${normalized}` : '';
+            }
+        }
+
+        if (phoneNode && phoneErr) {
+            const rawPhone = phoneNode.textContent.trim();
+            const hasPhone = rawPhone.length > 0;
+            const phoneOk = !hasPhone || isValidPhone(rawPhone);
+
+            phoneErr.textContent = phoneOk ? '' : 'Enter valid phone (10 to 15 digits)';
+            if (!phoneOk) valid = false;
+        }
+
+        return valid;
+    }
+
+    function applyEmailSuggestion() {
+        const { emailNode } = getContactElements();
+        if (!emailNode || !suggestedEmail) return;
+        emailNode.textContent = suggestedEmail;
+        validateContactsInline();
+    }
+
+    function bindLiveContactValidation() {
+        if (contactValidationBound) return;
+        const { emailNode, phoneNode } = getContactElements();
+
+        if (emailNode) {
+            emailNode.addEventListener('input', validateContactsInline);
+            emailNode.addEventListener('blur', validateContactsInline);
+        }
+        if (phoneNode) {
+            phoneNode.addEventListener('input', validateContactsInline);
+            phoneNode.addEventListener('blur', validateContactsInline);
+        }
+
+        contactValidationBound = true;
+    }
+
+    function undoEdit() {
+        document.execCommand('undo');
+        validateContactsInline();
+    }
+
+    function redoEdit() {
+        document.execCommand('redo');
+        validateContactsInline();
+    }
+
+    function attachSkillPillHandlers(pill) {
+        if (!pill || pill.dataset.bound === '1') return;
+        pill.dataset.bound = '1';
+
+        const textNode = pill.querySelector('.skill-text');
+        if (!textNode) return;
+
+        textNode.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                textNode.blur();
+            }
+
+            if (event.key === 'Backspace' && !textNode.textContent.trim()) {
+                event.preventDefault();
+                const prev = pill.previousElementSibling;
+                pill.remove();
+                if (prev && prev.classList.contains('skill-pill')) {
+                    const prevText = prev.querySelector('.skill-text');
+                    if (prevText) prevText.focus();
+                }
+            }
+        });
+
+        textNode.addEventListener('blur', () => {
+            textNode.textContent = textNode.textContent.trim();
+            if (!textNode.textContent) {
+                pill.remove();
+            }
+        });
+    }
+
+    function cleanSkillPills() {
+        document.querySelectorAll('.skill-pill').forEach((pill) => {
+            const textNode = pill.querySelector('.skill-text');
+            if (!textNode) {
+                pill.remove();
+                return;
+            }
+            textNode.textContent = textNode.textContent.trim();
+            if (!textNode.textContent) {
+                pill.remove();
+            }
+        });
+    }
+
+    function addSkillPill() {
+        const skillsList = document.getElementById('skillsList');
+        if (!skillsList || !editingMode) return;
+
+        const pill = document.createElement('span');
+        pill.className = 'skill-pill';
+        pill.draggable = editingMode;
+
+        const handle = document.createElement('button');
+        handle.type = 'button';
+        handle.className = 'drag-handle';
+        handle.setAttribute('data-drag-handle', '1');
+        handle.setAttribute('aria-label', 'Drag skill');
+        handle.innerHTML = '&#8942;&#8942;';
+
+        const textNode = document.createElement('span');
+        textNode.className = 'skill-text';
+        textNode.setAttribute('contenteditable', 'true');
+        textNode.setAttribute('data-placeholder', 'Type a skill');
+
+        pill.appendChild(handle);
+        pill.appendChild(textNode);
+        skillsList.appendChild(pill);
+        attachSkillPillHandlers(pill);
+        textNode.focus();
+    }
+
+    function markDropTarget(target) {
+        document.querySelectorAll('.drop-target').forEach((el) => el.classList.remove('drop-target'));
+        if (target) {
+            target.classList.add('drop-target');
+        }
+    }
+
+    function clearDropTargets() {
+        document.querySelectorAll('.drop-target').forEach((el) => el.classList.remove('drop-target'));
+    }
+
+    function applySortable(containerId, itemSelector) {
+        const container = document.getElementById(containerId);
+        if (!container || container.dataset.sortableBound === '1') return;
+
+        container.dataset.sortableBound = '1';
+
+        container.addEventListener('dragstart', (event) => {
+            if (!editingMode) {
+                event.preventDefault();
+                return;
+            }
+
+            const item = event.target.closest(itemSelector);
+            if (!item) return;
+
+            if (dragArmedElement !== item) {
+                event.preventDefault();
+                return;
+            }
+
+            draggedElement = item;
+            item.classList.add('dragging');
+            if (event.dataTransfer) {
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('text/plain', 'drag');
+            }
+        });
+
+        container.addEventListener('dragover', (event) => {
+            if (!editingMode || !draggedElement) return;
+            event.preventDefault();
+
+            const target = event.target.closest(itemSelector);
+            if (!target || target === draggedElement) {
+                markDropTarget(null);
+                return;
+            }
+
+            const rect = target.getBoundingClientRect();
+            const insertAfter = event.clientY > rect.top + (rect.height / 2);
+
+            if (insertAfter) {
+                container.insertBefore(draggedElement, target.nextElementSibling);
+            } else {
+                container.insertBefore(draggedElement, target);
+            }
+
+            markDropTarget(target);
+        });
+
+        container.addEventListener('drop', (event) => {
+            if (!editingMode) return;
+            event.preventDefault();
+            clearDropTargets();
+        });
+
+        container.addEventListener('mousedown', (event) => {
+            const handle = event.target.closest('[data-drag-handle]');
+            if (!handle) {
+                dragArmedElement = null;
+                return;
+            }
+            dragArmedElement = handle.closest(itemSelector);
+        });
+
+        container.addEventListener('mouseup', () => {
+            setTimeout(() => {
+                dragArmedElement = null;
+            }, 0);
+        });
+
+        container.addEventListener('dragend', () => {
+            if (draggedElement) {
+                draggedElement.classList.remove('dragging');
+            }
+            draggedElement = null;
+            dragArmedElement = null;
+            clearDropTargets();
+        });
+    }
+
+    function updateDraggableState() {
+        document.querySelectorAll('#skillsList .skill-pill').forEach((item) => {
+            item.draggable = editingMode;
+        });
+        document.querySelectorAll('#experienceList .exp-item').forEach((item) => {
+            item.draggable = editingMode;
+        });
+        document.querySelectorAll('#projectsList .proj-item').forEach((item) => {
+            item.draggable = editingMode;
+        });
+    }
+
+    function initDragAndDrop() {
+        applySortable('skillsList', '.skill-pill');
+        applySortable('experienceList', '.exp-item');
+        applySortable('projectsList', '.proj-item');
+        updateDraggableState();
+    }
+
+    function goBack() {
+        history.back();
+    }
+
+    function markResumeViewed() {
+        localStorage.setItem('resumeGenerated', 'true');
+        localStorage.setItem('resumeViewedAt', new Date().toISOString());
+    }
 
     function editSection(field) {
         // Toggle contenteditable on the resume page
         editingMode = !editingMode;
+        bindLiveContactValidation();
+        initDragAndDrop();
         const editables = document.querySelectorAll('[contenteditable]');
         editables.forEach(el => {
             el.contentEditable = editingMode ? 'true' : 'false';
@@ -293,29 +875,59 @@
             }
         });
 
+        const skillsToolbar = document.getElementById('skillsToolbar');
+        if (skillsToolbar) {
+            skillsToolbar.style.display = editingMode ? 'flex' : 'none';
+        }
+
+        const undoBtn = document.getElementById('undoBtn');
+        const redoBtn = document.getElementById('redoBtn');
+        if (undoBtn) undoBtn.style.display = editingMode ? 'inline-block' : 'none';
+        if (redoBtn) redoBtn.style.display = editingMode ? 'inline-block' : 'none';
+
+        document.querySelectorAll('.skill-pill .skill-text').forEach((textNode) => {
+            textNode.contentEditable = editingMode ? 'true' : 'false';
+        });
+        document.querySelectorAll('.skill-pill').forEach((pill) => {
+            attachSkillPillHandlers(pill);
+        });
+        if (!editingMode) {
+            cleanSkillPills();
+        }
+        updateDraggableState();
+
         const saveBtn = document.getElementById('saveBtn');
         saveBtn.style.display = editingMode ? 'inline-block' : 'none';
 
-        // Update all Edit buttons
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.textContent = editingMode ? 'Done' : 'Edit';
+        // Update Edit button
+        const editBtn = document.getElementById('editBtn');
+        if (editBtn) {
+            editBtn.textContent = editingMode ? '✓ Done' : '✏️ Edit';
+        }
+
+        // Show/hide drag handles based on edit mode
+        document.querySelectorAll('.drag-handle').forEach(handle => {
+            if (editingMode) {
+                handle.classList.add('visible');
+            } else {
+                handle.classList.remove('visible');
+            }
         });
     }
 
     function collectResumeData() {
         const data = {};
+        cleanSkillPills();
 
         // Name
         const h1 = document.querySelector('.header h1');
         if (h1) data.name = h1.textContent.trim();
 
         // Contact
-        const contactItems = document.querySelectorAll('.contact-item');
-        contactItems.forEach(item => {
-            const text = item.textContent.trim();
-            if (text.includes('@')) data.email = text;
-            else if (/[\d\-\+\(\)]{7,}/.test(text)) data.phone = text;
-        });
+        const emailNode = document.querySelector('.contact-email');
+        const phoneNode = document.querySelector('.contact-phone');
+        if (emailNode) data.email = emailNode.textContent.trim();
+        if (phoneNode) data.phone = phoneNode.textContent.trim();
 
         // Summary
         const summary = document.querySelector('.summary-text');
@@ -324,7 +936,12 @@
         // Skills
         const skillPills = document.querySelectorAll('.skill-pill');
         if (skillPills.length) {
-            data.skills = Array.from(skillPills).map(s => s.textContent.trim()).filter(Boolean);
+            data.skills = Array.from(skillPills)
+                .map((pill) => {
+                    const textNode = pill.querySelector('.skill-text');
+                    return textNode ? textNode.textContent.trim() : '';
+                })
+                .filter(Boolean);
         }
 
         // Experience
@@ -378,7 +995,29 @@
     }
 
     function saveEdits() {
+        if (!validateContactsInline()) {
+            showToast('Please fix email/phone errors before saving.', 'error', 'Validation Needed');
+            return;
+        }
+
         const data = collectResumeData();
+
+        if (data.email) {
+            data.email = normalizeSpokenEmail(data.email);
+            const emailNode = document.querySelector('.contact-email');
+            if (emailNode) emailNode.textContent = data.email;
+        }
+
+        if (data.email && !isValidEmail(data.email)) {
+            showToast('Please use a valid format like name@example.com.', 'email', 'Email Not Valid');
+            return;
+        }
+
+        if (data.phone && !isValidPhone(data.phone)) {
+            showToast('Please enter a valid phone number with 10 to 15 digits.', 'phone', 'Phone Not Valid');
+            return;
+        }
+
         fetch('/save-resume', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -387,17 +1026,17 @@
         .then(res => res.json())
         .then(result => {
             if (result.error) {
-                alert('Save failed: ' + result.error);
+                showToast('Save failed: ' + result.error, 'error', 'Save Failed');
             } else {
                 // Exit edit mode
                 editingMode = true;
                 editSection(''); // toggles off
-                alert('Changes saved!');
+                showToast('Changes saved successfully.', 'success', 'Saved');
             }
         })
         .catch(err => {
             console.error('Save error:', err);
-            alert('Failed to save changes.');
+            showToast('Failed to save changes.', 'error', 'Network Error');
         });
     }
 
@@ -411,6 +1050,9 @@
             document.querySelectorAll('.edit-btn').forEach(b => b.style.display = '');
         }, 500);
     }
+
+    initDragAndDrop();
+    markResumeViewed();
 </script>
 
 </body>

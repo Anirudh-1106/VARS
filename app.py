@@ -160,6 +160,47 @@ def normalize_experience_order(experience):
     return sorted(normalized, key=_experience_sort_key, reverse=True)
 
 
+def is_valid_email(email: str) -> bool:
+    if not isinstance(email, str):
+        return False
+    value = email.strip()
+    if not value:
+        return False
+    return bool(re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", value))
+
+
+def is_valid_phone(phone: str) -> bool:
+    if not isinstance(phone, str):
+        return False
+    value = phone.strip()
+    if not value:
+        return False
+    if not re.fullmatch(r"\+?[\d\s\-()]+", value):
+        return False
+    digits = re.sub(r"\D", "", value)
+    return 10 <= len(digits) <= 15
+
+
+def normalize_spoken_email(email: str) -> str:
+    if not isinstance(email, str):
+        return ""
+
+    value = email.strip()
+    if not value:
+        return ""
+
+    value = re.sub(r"\s*\(at\)\s*", "@", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+at\s+the\s+rate\s+of\s+", "@", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+at\s+the\s+rate\s+", "@", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+at\s+", "@", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+dot\s+", ".", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+underscore\s+", "_", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+dash\s+", "-", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+", "", value)
+
+    return value
+
+
 def get_model():
     global whisper_asr
 
@@ -286,6 +327,8 @@ def process_transcript():
                 }), 400
 
             updated = modify_resume_data(current_data, transcript)
+            if updated.get("email"):
+                updated["email"] = normalize_spoken_email(updated["email"])
             updated["skills"] = normalize_skills(updated.get("skills", []))
             updated["experience"] = normalize_experience_order(updated.get("experience", []))
             resume_state.update(updated, replace_lists=True)
@@ -296,6 +339,8 @@ def process_transcript():
             })
         else:
             extracted = extract_resume_data(transcript)
+            if extracted.get("email"):
+                extracted["email"] = normalize_spoken_email(extracted["email"])
             extracted["skills"] = normalize_skills(extracted.get("skills", []))
             extracted["experience"] = normalize_experience_order(extracted.get("experience", []))
             resume_state.update(extracted)
@@ -339,6 +384,18 @@ def save_resume():
     payload = request.get_json(force=True)
     if not payload:
         return jsonify({"error": "No data provided"}), 400
+
+    if payload.get("email"):
+        payload["email"] = normalize_spoken_email(payload["email"])
+
+    email = payload.get("email")
+    if email and not is_valid_email(email):
+        return jsonify({"error": "Invalid email address. Please include a valid @ email format."}), 400
+
+    phone = payload.get("phone")
+    if phone and not is_valid_phone(phone):
+        return jsonify({"error": "Invalid phone number. Please enter a valid phone number."}), 400
+
     payload["experience"] = normalize_experience_order(payload.get("experience", []))
     resume_state.update(payload, replace_lists=True)
     return jsonify({"message": "Resume saved.", "data": resume_state.get_resume_data()})

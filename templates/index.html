@@ -515,6 +515,33 @@
 
         .generate-btn .icon { font-size: 1.15rem; }
 
+        /* ── View Resume Button ── */
+        .view-resume-btn {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--accent), #00b7e7);
+            color: #031219;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transition: all 0.25s ease;
+            letter-spacing: -0.2px;
+        }
+
+        .view-resume-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 28px var(--accent-glow);
+        }
+
+        .view-resume-btn .icon { font-size: 1.15rem; }
+
         /* ── Footer ── */
         .footer {
             position: relative;
@@ -619,6 +646,12 @@
         Generate Resume
     </a>
 
+    <!-- View Generated Resume -->
+    <a class="view-resume-btn" id="viewResumeBtn" href="/generate-resume">
+        <span class="icon">📋</span>
+        View Generated Resume
+    </a>
+
 </main>
 
 <!-- ── Footer ── -->
@@ -627,6 +660,29 @@
 </footer>
 
 <script src="/static/recorder.js?v=8"></script>
+
+<script>
+    // Check if resume was generated and show view button
+    function updateResumeButtonVisibility() {
+        const generateBtn = document.getElementById('generateBtn');
+        const viewResumeBtn = document.getElementById('viewResumeBtn');
+        const resumeGenerated = localStorage.getItem('resumeGenerated') === 'true';
+        
+        if (generateBtn) {
+            generateBtn.style.display = resumeGenerated ? 'none' : 'flex';
+        }
+        
+        if (viewResumeBtn) {
+            viewResumeBtn.style.display = resumeGenerated ? 'flex' : 'none';
+        }
+    }
+    
+    // Update on page load
+    updateResumeButtonVisibility();
+    
+    // Listen for storage changes from other tabs/windows
+    window.addEventListener('storage', updateResumeButtonVisibility);
+</script>
 
 </body>
 </html>

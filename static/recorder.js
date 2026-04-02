@@ -75,6 +75,26 @@ function hasText(value) {
     return typeof value === "string" && value.trim().length > 0 && value.trim().toLowerCase() !== "none";
 }
 
+function isValidEmail(value) {
+    if (!hasText(value)) {
+        return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value.trim());
+}
+
+function isValidPhone(value) {
+    if (!hasText(value)) {
+        return false;
+    }
+    const text = value.trim();
+    if (!/^\+?[\d\s\-()]+$/.test(text)) {
+        return false;
+    }
+    const digits = text.replace(/\D/g, "");
+    return digits.length >= 10 && digits.length <= 15;
+}
+
 function normalizeUrl(value) {
     const trimmed = (value || "").trim();
     if (!trimmed) {
@@ -86,6 +106,23 @@ function normalizeUrl(value) {
     }
 
     return `https://${trimmed}`;
+}
+
+function normalizeSpokenEmail(value) {
+    const trimmed = (value || "").trim();
+    if (!trimmed) {
+        return "";
+    }
+
+    return trimmed
+        .replace(/\s*\(at\)\s*/gi, "@")
+        .replace(/\s+at\s+the\s+rate\s+of\s+/gi, "@")
+        .replace(/\s+at\s+the\s+rate\s+/gi, "@")
+        .replace(/\s+at\s+/gi, "@")
+        .replace(/\s+dot\s+/gi, ".")
+        .replace(/\s+underscore\s+/gi, "_")
+        .replace(/\s+dash\s+/gi, "-")
+        .replace(/\s+/g, "");
 }
 
 function toggleMissingPanel(show) {
@@ -270,36 +307,43 @@ function buildMissingQuestions(data) {
         });
     }
 
-    if (!hasText(data?.email)) {
+    if (!hasText(data?.email) || !isValidEmail(normalizeSpokenEmail(data.email))) {
         questions.push({
             key: "email",
             path: "email",
-            question: "What is your email address?",
-            hint: "Recruiters use this as your primary contact.",
+            question: hasText(data?.email)
+                ? "Your email looks invalid. Please provide a correct email address."
+                : "What is your email address?",
+            hint: hasText(data?.email)
+                ? "Use format like name@example.com."
+                : "Recruiters use this as your primary contact.",
             placeholder: "Example: name@example.com",
+            normalize: (value) => normalizeSpokenEmail(value),
             validate: (value) => {
                 if (!hasText(value)) {
                     return "Email is required.";
                 }
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(value.trim()) || "Enter a valid email address.";
+                return isValidEmail(value) || "Enter a valid email address.";
             }
         });
     }
 
-    if (!hasText(data?.phone)) {
+    if (!hasText(data?.phone) || !isValidPhone(data.phone)) {
         questions.push({
             key: "phone",
             path: "phone",
-            question: "What is your phone number?",
-            hint: "Include country code if needed.",
+            question: hasText(data?.phone)
+                ? "Your phone number looks invalid. Please provide a correct number."
+                : "What is your phone number?",
+            hint: hasText(data?.phone)
+                ? "Use 10 to 15 digits (you can include +, spaces, or dashes)."
+                : "Include country code if needed.",
             placeholder: "Example: +91 98765 43210",
             validate: (value) => {
                 if (!hasText(value)) {
                     return "Phone number is required.";
                 }
-                const digits = value.replace(/\D/g, "");
-                return digits.length >= 7 || "Enter a valid phone number.";
+                return isValidPhone(value) || "Enter a valid phone number.";
             }
         });
     }
@@ -401,7 +445,7 @@ function openMissingAssistant(data) {
     }
 
     toggleMissingPanel(true);
-    setStatus("Please fill missing details", "processing");
+    setStatus("Please fill missing or fix invalid details", "processing");
     renderMissingQuestion();
 }
 
@@ -418,7 +462,22 @@ async function saveMissingDetails() {
         const data = await response.json();
 
         if (!response.ok || data.error) {
-            setStatus(data.error || "Unable to save details", "error");
+            const errorMessage = data.error || "Unable to save details";
+            setStatus(errorMessage, "error");
+
+            if (errorMessage.toLowerCase().includes("email") || errorMessage.toLowerCase().includes("phone")) {
+                missingQuestions = buildMissingQuestions(workingResumeData);
+
+                if (missingQuestions.length) {
+                    const targetIndex = missingQuestions.findIndex((question) =>
+                        errorMessage.toLowerCase().includes(question.key)
+                    );
+                    missingIndex = targetIndex >= 0 ? targetIndex : 0;
+                    toggleMissingPanel(true);
+                    renderMissingQuestion();
+                }
+            }
+
             setMissingButtonsDisabled(false);
             return;
         }
