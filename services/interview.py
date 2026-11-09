@@ -122,6 +122,8 @@ def plan(config: dict, resume: dict | None) -> dict:
         f"Technical questions: {n_tech} (about half from the resume, the rest fundamentals/scenarios). HR questions: {n_hr}.\n"
         f"Estimated total duration: about {round(n_tech * 3 + n_hr * 2.5 + (15 if config.get('coding_title') else 0))} minutes (use this number if you mention duration).\n"
         f"Coding problem title (for coding_intro): {config.get('coding_title') or 'none'}\n"
+        f"Rounds in this interview, in order: {', '.join(r for r, on in (('technical', n_tech), ('coding', config.get('coding_title')), ('HR', n_hr)) if on)}. "
+        "Mention only these rounds in the opening.\n"
         + (f"Placement-cell questions to include in the right round, verbatim meaning: {json.dumps(drive_qs)}\n" if drive_qs else "")
         + f"\nRESUME JSON:\n{resume_brief}"
     )

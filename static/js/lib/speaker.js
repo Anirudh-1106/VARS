@@ -3,6 +3,7 @@
 // synthesis takes over. `energy` drives the avatar's mouth.
 
 import { api } from "../core/api.js";
+import { buildTimeline, visemeAt, wordVisemes } from "./lipsync.js";
 
 export class Speaker {
   constructor() {
@@ -17,6 +18,26 @@ export class Speaker {
     this.useBrowser = false;
     this._synthTimer = null;
     this._stopResolve = null;
+    this.timeline = null;
+    this.liveWord = null;
+  }
+
+  // Current mouth shape for the avatar ("REST" when silent).
+  viseme() {
+    if (!this.speaking) return "REST";
+    if (this.timeline && !this.audio.paused) {
+      const shape = visemeAt(this.timeline, this.audio.currentTime + 0.03);
+      // a scheduled vowel during real silence (a breath, a pause) closes the mouth
+      if (shape !== "MBP" && shape !== "REST" && this.energy < 0.035) return "REST";
+      return shape;
+    }
+    if (this.liveWord) {
+      const { shapes, start, dur } = this.liveWord;
+      const f = (performance.now() - start) / 1000 / dur;
+      if (f >= 1) return "REST";
+      return shapes[Math.min(shapes.length - 1, Math.floor(f * shapes.length))];
+    }
+    return "REST";
   }
 
   // Must be called from a user gesture (e.g. the Begin button).
@@ -71,11 +92,22 @@ export class Speaker {
     this.stop();
     if (!text) return;
     let url = null;
+    let words = [];
+    this.timeline = null;
+    this.liveWord = null;
     if (!this.useBrowser) {
-      url = await (this.cache.get(this.key(text, persona)) || api.tts(text, persona));
+      const res = await (this.cache.get(this.key(text, persona)) || api.tts(text, persona));
       this.cache.delete(this.key(text, persona));
+      if (res) {
+        url = res.url;
+        words = res.words || [];
+      }
     }
     if (url) {
+      if (words.length) this.timeline = buildTimeline(text, words);
+      this.audio.onloadedmetadata = () => {
+        if (!this.timeline && Number.isFinite(this.audio.duration)) this.timeline = buildTimeline(text, [], this.audio.duration);
+      };
       return new Promise((resolve) => {
         this._stopResolve = resolve;
         this.audio.src = url;
@@ -125,6 +157,10 @@ export class Speaker {
         if (e.name === "word") {
           spoken += 1;
           this._synthProgress = Math.min(1, spoken / words);
+          const rest = text.slice(e.charIndex);
+          const word = (rest.match(/^[\w'-]+/) || [""])[0];
+          const shapes = wordVisemes(word);
+          if (shapes.length) this.liveWord = { shapes, start: performance.now(), dur: Math.max(0.16, word.length * 0.068) };
         }
       };
       const done = () => {

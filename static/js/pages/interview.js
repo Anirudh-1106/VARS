@@ -349,8 +349,9 @@ function enterRoom() {
   const loop = (now) => {
     const energy = speaker.sample();
     const mic = recorder.recording ? recorder.level() : 0;
-    avatar?.frame(now, energy, mic);
-    miniAvatar?.frame(now, energy, mic);
+    const viseme = speaker.viseme();
+    avatar?.frame(now, energy, mic, viseme);
+    miniAvatar?.frame(now, energy, mic, viseme);
     if (ui.meter && recorder.recording) ui.meter.set(mic);
     if (speaker.speaking && ui.capText) paintCaption(speaker.progress());
     rafId = requestAnimationFrame(loop);

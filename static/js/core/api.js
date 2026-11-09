@@ -84,19 +84,22 @@ export const api = {
     }
     return full;
   },
-  // Returns an audio Blob URL, or null when the server says to use the browser voice.
+  // Returns { url, words } (an audio Blob URL plus per-word timings for
+  // lip-sync), or null when the server says to use the browser voice.
   async tts(text, persona, opts = {}) {
     try {
       const res = await fetch("/api/speech/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, persona }),
+        body: JSON.stringify({ text, persona, marks: true }),
         signal: opts.signal,
       });
       if (!res.ok) return null;
-      const blob = await res.blob();
-      if (!blob.size) return null;
-      return URL.createObjectURL(blob);
+      const data = await res.json();
+      if (!data.audio) return null;
+      const bytes = Uint8Array.from(atob(data.audio), (c) => c.charCodeAt(0));
+      const url = URL.createObjectURL(new Blob([bytes], { type: data.mime || "audio/mpeg" }));
+      return { url, words: Array.isArray(data.words) ? data.words : [] };
     } catch {
       return null;
     }

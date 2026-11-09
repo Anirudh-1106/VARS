@@ -289,6 +289,55 @@ def _edge_stream(text: str, voice: str, rate: str):
     return gen()
 
 
+def _edge_marked(text: str, voice: str, rate: str) -> tuple[bytes, list[dict]]:
+    import edge_tts
+
+    async def run():
+        comm = edge_tts.Communicate(text, voice, rate=rate, boundary="WordBoundary")
+        audio = bytearray()
+        words = []
+        async for chunk in comm.stream():
+            if chunk.get("type") == "audio":
+                audio.extend(chunk["data"])
+            elif chunk.get("type") == "WordBoundary":
+                # offsets and durations arrive in 100-nanosecond ticks
+                words.append({
+                    "w": str(chunk.get("text") or ""),
+                    "t": round(chunk.get("offset", 0) / 1e7, 3),
+                    "d": round(chunk.get("duration", 0) / 1e7, 3),
+                })
+        return bytes(audio), words
+
+    audio, words = asyncio.run(run())
+    if not audio:
+        raise SpeechError("edge produced no audio")
+    return audio, words
+
+
+def tts_marked(text: str, persona: str = "meera") -> dict:
+    """Audio plus word timings (for lip-sync). Word list is empty when the engine has none."""
+    text = re.sub(r"\s+", " ", (text or "")).strip()[:1500]
+    if not text:
+        raise SpeechError("Nothing to say.")
+    spec = PERSONAS.get(persona, PERSONAS["meera"])
+    for engine in config.TTS_CHAIN:
+        if engine in _disabled_tts:
+            continue
+        try:
+            if engine == "orpheus":
+                data, mime = _orpheus(text, spec["orpheus"])
+                return {"mime": mime, "audio": data, "words": []}
+            if engine == "edge":
+                data, words = _edge_marked(text, spec["edge"], spec["rate"])
+                return {"mime": "audio/mpeg", "audio": data, "words": words}
+        except Exception as exc:
+            message = str(exc).lower()
+            if engine == "orpheus" and ("terms" in message or "not_found" in message or "decommissioned" in message or "permission" in message):
+                _disabled_tts.add("orpheus")
+            log.warning("TTS engine %s failed: %s", engine, type(exc).__name__)
+    raise SpeechError("No neural voice is available; the browser voice will be used.")
+
+
 def tts(text: str, persona: str = "meera"):
     """Return ``(mimetype, iterator_of_bytes)`` or raise SpeechError."""
     text = re.sub(r"\s+", " ", (text or "")).strip()[:1500]

@@ -8,6 +8,7 @@ disappears when the tab is closed, unless the student exports it.
 
 from __future__ import annotations
 
+import base64
 import logging
 import time
 
@@ -259,6 +260,17 @@ def speech_transcribe():
 @app.post("/api/speech/tts")
 def speech_tts():
     payload = body()
+    if payload.get("marks"):
+        # Audio plus per-word timings, used to drive the interviewer's lip-sync.
+        try:
+            result = speech.tts_marked(payload.get("text", ""), payload.get("persona", "meera"))
+        except speech.SpeechError as exc:
+            return jsonify({"error": str(exc), "fallback": "browser"}), 503
+        return jsonify({
+            "mime": result["mime"],
+            "audio": base64.b64encode(result["audio"]).decode("ascii"),
+            "words": result["words"],
+        })
     try:
         mime, chunks = speech.tts(payload.get("text", ""), payload.get("persona", "meera"))
     except speech.SpeechError as exc:
