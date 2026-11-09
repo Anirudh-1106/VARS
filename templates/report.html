@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block head %}<link rel="stylesheet" href="/static/css/report.css?v={{ v }}">{% endblock %}
+{% block main %}
+<div class="page-head">
+  <h1>Report</h1>
+  <span class="meta" id="meta"></span>
+  <div class="actions" id="actions"></div>
+</div>
+<section class="page-body" id="panel"></section>
+{% endblock %}
+{% block scripts %}<script type="module" src="/static/js/pages/report.js?v={{ v }}"></script>{% endblock %}

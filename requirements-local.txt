@@ -1,0 +1,8 @@
+-r requirements.txt
+
+# Local speech recognition (Whisper large-v3). Needs ffmpeg on PATH.
+# For NVIDIA GPUs install the CUDA build of torch from https://pytorch.org first.
+torch>=2.2
+transformers>=4.41
+accelerate>=0.30
+numpy>=1.26

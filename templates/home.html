@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block head %}<link rel="stylesheet" href="/static/css/home.css?v={{ v }}">{% endblock %}
+{% block main %}
+<div class="home" id="home">
+  <section class="hero">
+    <div>
+      <h1>Know where you stand before the drive.</h1>
+      <p class="lede">VARS reads your resume the way a recruiter does, interviews you like a real panel, and tells you exactly what to fix. Technical, coding and HR rounds, in one sitting.</p>
+      <div class="cta">
+        <a class="btn lg" href="/studio"><svg><use href="#i-doc"/></svg>Check my resume</a>
+        <a class="btn lg secondary" href="/interview"><svg><use href="#i-person"/></svg>Start a mock interview</a>
+      </div>
+      <p class="alt">No resume yet? <a href="/build">Build one by speaking</a>, in English or Malayalam.</p>
+    </div>
+    <div id="enquiry"></div>
+  </section>
+
+  <section class="band">
+    <h2>Three stops from a rough resume to a confident interview</h2>
+    <p>Your readiness reads like a ticket status. Every item you clear moves you up the list, from waitlisted to confirmed.</p>
+    <div class="route">
+      <div class="stop">
+        <h3>Resume Studio</h3>
+        <p>An objective score where every point lost is pinned to the exact line that caused it.</p>
+        <ul>
+          <li><svg><use href="#i-check"/></svg>Rewrites that keep your facts and never invent numbers</li>
+          <li><svg><use href="#i-check"/></svg>Your fit for 16 campus roles, with the skills each one is missing</li>
+          <li><svg><use href="#i-check"/></svg>Match against a real job description, and a chat that knows your resume</li>
+        </ul>
+        <a href="/studio">Open Resume Studio <svg><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="stop">
+        <h3>Mock interview</h3>
+        <p>A speaking interviewer asks about your own projects, then the role's fundamentals, and follows up when an answer is thin.</p>
+        <ul>
+          <li><svg><use href="#i-check"/></svg>A coding problem with hidden tests, run in your browser</li>
+          <li><svg><use href="#i-check"/></svg>An HR round with a second interviewer</li>
+          <li><svg><use href="#i-check"/></svg>Answer by voice or by typing, with captions throughout</li>
+        </ul>
+        <a href="/interview">Set up an interview <svg><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="stop">
+        <h3>Report</h3>
+        <p>Every answer scored against what a strong answer contains, with a model answer beside yours.</p>
+        <ul>
+          <li><svg><use href="#i-check"/></svg>Six competencies, pace and filler words from your voice</li>
+          <li><svg><use href="#i-check"/></svg>“Say this instead” rewrites built from your real experience</li>
+          <li><svg><use href="#i-check"/></svg>A three-week plan tied to your weakest areas</li>
+        </ul>
+        <a href="/report">See your report <svg><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <h2>Nothing you share is kept</h2>
+    <p>The server has no database and no upload folder. Each request is handled in memory and forgotten. Your session lives in this browser tab and disappears when you close it.</p>
+    <div class="chart-wrap data-table">
+      <table class="chart">
+        <thead><tr><th>What you share</th><th>What VARS does with it</th><th style="text-align:right">Stored</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Resume file</strong></td><td>Read in memory, scored, discarded at the end of the request</td><td class="st">NO</td></tr>
+          <tr><td><strong>Voice recordings</strong></td><td>Transcribed, then dropped. Only the text comes back to your tab</td><td class="st">NO</td></tr>
+          <tr><td><strong>Interview answers</strong></td><td>Scored one at a time; the full interview stays in your tab</td><td class="st">NO</td></tr>
+          <tr><td><strong>Python and JavaScript code</strong></td><td>Runs inside your browser and never leaves it</td><td class="st">NO</td></tr>
+          <tr><td><strong>Java and C++ code</strong></td><td>Compiled in a temporary folder that is deleted right after the run</td><td class="st">NO</td></tr>
+          <tr><td><strong>Camera</strong></td><td>Self-view only. It is never recorded or sent anywhere</td><td class="st">NO</td></tr>
+          <tr><td><strong>Reports</strong></td><td>Kept in your tab. Export a signed file if you want to keep or share one</td><td class="st">NO</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="cell-band">
+      <div>
+        <h2>For placement cells</h2>
+        <p>Create a mock drive as one signed link: same role, rounds and questions for every student. Students send back a signed report file, and you see batch readiness in your browser. No accounts, no student database.</p>
+      </div>
+      <a class="btn lg" href="/cell">Open the placement cell desk</a>
+    </div>
+  </section>
+
+  <footer class="home-foot">
+    <span>VARS · placement coach</span>
+    <span>Role guidance is curated for campus hiring, not live market data. Scores are practice signals, not hiring decisions.</span>
+  </footer>
+</div>
+{% endblock %}
+{% block scripts %}<script type="module" src="/static/js/pages/home.js?v={{ v }}"></script>{% endblock %}

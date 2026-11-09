@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block head %}<link rel="stylesheet" href="/static/css/build.css?v={{ v }}"><link rel="stylesheet" href="/static/css/interview.css?v={{ v }}">{% endblock %}
+{% block main %}
+<div class="page-head">
+  <h1>Build by voice</h1>
+  <span class="meta">English · മലയാളം · mixed</span>
+  <div class="actions" id="actions"></div>
+</div>
+<section class="page-body" id="panel"></section>
+{% endblock %}
+{% block scripts %}<script type="module" src="/static/js/pages/build.js?v={{ v }}"></script>{% endblock %}

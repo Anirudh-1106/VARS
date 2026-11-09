@@ -1,0 +1,570 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-09T07:39:22+00:00",
+  "title": "Design System: VARS",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Stationery Paper",
+        "canonical": "#F3F5F0",
+        "tonalRamp": [
+          "#0A0C09",
+          "#262723",
+          "#444642",
+          "#656762",
+          "#888A85",
+          "#ADAFAA",
+          "#D0D2CD",
+          "#EEEFED"
+        ]
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "Stationery Paper Light",
+        "canonical": "#F8FAF6"
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "White Sheet",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#0B0B0B",
+          "#262626",
+          "#454545",
+          "#666666",
+          "#898989",
+          "#AEAEAE",
+          "#D1D1D1",
+          "#EEEEEE"
+        ]
+      },
+      "bar": {
+        "role": "neutral",
+        "displayName": "Green Bar",
+        "canonical": "#DDEAD6",
+        "tonalRamp": [
+          "#060E03",
+          "#202A1B",
+          "#3E4938",
+          "#5F6A59",
+          "#828D7B",
+          "#A6B29F",
+          "#C9D6C3",
+          "#ECF0E9"
+        ]
+      },
+      "bar-2": {
+        "role": "neutral",
+        "displayName": "Green Bar Light",
+        "canonical": "#E9F1E5"
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#C9D3C4",
+        "tonalRamp": [
+          "#070D04",
+          "#22291E",
+          "#40483C",
+          "#60695C",
+          "#838D7F",
+          "#A8B1A3",
+          "#CBD5C6",
+          "#ECF0EA"
+        ]
+      },
+      "rule-2": {
+        "role": "neutral",
+        "displayName": "Hairline Faint",
+        "canonical": "#DEE4DA"
+      },
+      "control-rule": {
+        "role": "neutral",
+        "displayName": "Control Rule",
+        "canonical": "#A9B3A4",
+        "tonalRamp": [
+          "#070D04",
+          "#21291D",
+          "#40483B",
+          "#60695C",
+          "#838D7E",
+          "#A8B2A3",
+          "#CBD5C6",
+          "#ECF0EA"
+        ]
+      },
+      "ink": {
+        "role": "secondary",
+        "displayName": "Ribbon Ink",
+        "canonical": "#22212A",
+        "tonalRamp": [
+          "#0B0A12",
+          "#26252E",
+          "#45444E",
+          "#66656F",
+          "#898893",
+          "#ADACB8",
+          "#D1D0D8",
+          "#EEEEF2"
+        ]
+      },
+      "ink-hover": {
+        "role": "secondary",
+        "displayName": "Ribbon Ink Lifted",
+        "canonical": "#3A3944"
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Faded Ribbon",
+        "canonical": "#4E4C58",
+        "tonalRamp": [
+          "#0B0A13",
+          "#27252F",
+          "#45434F",
+          "#666471",
+          "#898794",
+          "#AEACBA",
+          "#D1CFDA",
+          "#EEEEF3"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Faded Ribbon Light",
+        "canonical": "#5F5D6A",
+        "tonalRamp": [
+          "#0B0913",
+          "#272530",
+          "#45434F",
+          "#666471",
+          "#898795",
+          "#AEACBA",
+          "#D1CFDB",
+          "#EEEEF3"
+        ]
+      },
+      "ink-inverse-muted": {
+        "role": "neutral",
+        "displayName": "Muted on Ink",
+        "canonical": "#CFCDD8"
+      },
+      "coach": {
+        "role": "primary",
+        "displayName": "Coach Blue",
+        "canonical": "#1C4A9C",
+        "tonalRamp": [
+          "#010046",
+          "#001A6A",
+          "#113F90",
+          "#3362B7",
+          "#5587DF",
+          "#79ADFF",
+          "#AAD2FF",
+          "#DCF0FF"
+        ]
+      },
+      "coach-2": {
+        "role": "primary",
+        "displayName": "Coach Blue Deep",
+        "canonical": "#163D82"
+      },
+      "coach-wash": {
+        "role": "primary",
+        "displayName": "Coach Wash",
+        "canonical": "#E3EAF7",
+        "tonalRamp": [
+          "#070B13",
+          "#212730",
+          "#404550",
+          "#606671",
+          "#838995",
+          "#A8AEBA",
+          "#CBD1DD",
+          "#ECEEF3"
+        ]
+      },
+      "coach-ink": {
+        "role": "primary",
+        "displayName": "On Coach",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#0B0B0B",
+          "#262626",
+          "#454545",
+          "#666666",
+          "#898989",
+          "#AEAEAE",
+          "#D1D1D1",
+          "#EEEEEE"
+        ]
+      },
+      "coach-ink-2": {
+        "role": "primary",
+        "displayName": "On Coach Muted",
+        "canonical": "#C3D1EE"
+      },
+      "cnf": {
+        "role": "tertiary",
+        "displayName": "Confirmed Green",
+        "canonical": "#1F7A4D",
+        "tonalRamp": [
+          "#001500",
+          "#00340C",
+          "#00552B",
+          "#1D784B",
+          "#489D6E",
+          "#6EC392",
+          "#A1E3BA",
+          "#DBF7E4"
+        ]
+      },
+      "rac": {
+        "role": "tertiary",
+        "displayName": "RAC Amber",
+        "canonical": "#9A6200",
+        "tonalRamp": [
+          "#250000",
+          "#471400",
+          "#6B3600",
+          "#8F5800",
+          "#B57C2C",
+          "#DDA154",
+          "#F9C78B",
+          "#FFEBD1"
+        ]
+      },
+      "wl": {
+        "role": "tertiary",
+        "displayName": "Waitlist Red",
+        "canonical": "#B23A2B",
+        "tonalRamp": [
+          "#360000",
+          "#5E0000",
+          "#860300",
+          "#AE3728",
+          "#D85D4B",
+          "#FF836F",
+          "#FFB19F",
+          "#FFE2D9"
+        ]
+      },
+      "wl-deep": {
+        "role": "tertiary",
+        "displayName": "Waitlist Red Deep",
+        "canonical": "#962F22"
+      },
+      "cnf-bg": {
+        "role": "tertiary",
+        "displayName": "Confirmed Tint",
+        "canonical": "#DCEFE3"
+      },
+      "rac-bg": {
+        "role": "tertiary",
+        "displayName": "RAC Tint",
+        "canonical": "#F5E6C6"
+      },
+      "wl-bg": {
+        "role": "tertiary",
+        "displayName": "Waitlist Tint",
+        "canonical": "#F6DCD7"
+      },
+      "hl-wl": {
+        "role": "tertiary",
+        "displayName": "Waitlist Line Highlight",
+        "canonical": "#F7D9D3"
+      },
+      "hl-rac": {
+        "role": "tertiary",
+        "displayName": "RAC Line Highlight",
+        "canonical": "#F8E7C2"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Home hero heading only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page title in the work-area head row."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text, chart cells, chat."
+      },
+      "rule-label": {
+        "displayName": "Rule Label",
+        "purpose": "Uppercase heading for a chart column, legend or section rule; sits on a 1px ink rule."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "JetBrains Mono 700 caps: line IDs, pins, speaker names, pass and enquiry headers, tickers."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "File meta, editor, I/O samples."
+      },
+      "status-display": {
+        "displayName": "Status Display",
+        "purpose": "Doto status code in a status block."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Doto score-strip values, clocks, stepper outputs, report stamp."
+      },
+      "status-inline": {
+        "displayName": "Status Inline",
+        "purpose": "Doto status in chips, chart status column and the trail."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shadow-page",
+        "value": "0 1px 2px rgba(34, 33, 42, .08), 0 10px 28px -6px rgba(34, 33, 42, .10)",
+        "purpose": "Physical documents only: resume sheet, report printout, enquiry card, interview pass."
+      },
+      {
+        "name": "shadow-pop",
+        "value": "0 2px 4px rgba(34, 33, 42, .08), 0 16px 40px -8px rgba(34, 33, 42, .22)",
+        "purpose": "Floating layers: dialogs, toasts, self-view tile."
+      },
+      {
+        "name": "focus-ring-input",
+        "value": "0 0 0 3px rgba(28, 74, 156, .18)",
+        "purpose": "Focused input, paired with a coach-blue border."
+      },
+      {
+        "name": "focus-outline",
+        "value": "outline: 2px solid #1C4A9C; outline-offset: 2px",
+        "purpose": "Global :focus-visible ring."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Row flash and toast entrance."
+      },
+      {
+        "name": "tick",
+        "value": "tick .45s steps(3) 1",
+        "purpose": "Dot-matrix flicker on each status step during the tickTo countdown."
+      },
+      {
+        "name": "rowlit",
+        "value": "rowlit 2.6s cubic-bezier(.16, 1, .3, 1) 1",
+        "purpose": "Fixed chart row holds cnf-bg, then fades."
+      },
+      {
+        "name": "toastin",
+        "value": "toastin .35s cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Toast rises 8px and fades in."
+      },
+      {
+        "name": "dotp",
+        "value": "dotp 1.2s steps(1) infinite",
+        "purpose": "Ticker dots pulse in sequence, 0.2s apart."
+      },
+      {
+        "name": "control",
+        "value": "background .15s, border-color .15s, transform .1s",
+        "purpose": "Button state transitions; active nudges 1px."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation-duration .01ms; transition-duration .01ms",
+        "purpose": "Global override under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "studio-stack",
+        "value": "1180px"
+      },
+      {
+        "name": "room-stack",
+        "value": "1100px"
+      },
+      {
+        "name": "build-stack",
+        "value": "1060px"
+      },
+      {
+        "name": "home-stack",
+        "value": "1000px"
+      },
+      {
+        "name": "shell-topbar",
+        "value": "960px"
+      },
+      {
+        "name": "report-stack",
+        "value": "900px"
+      },
+      {
+        "name": "narrow",
+        "value": "760px"
+      },
+      {
+        "name": "compact",
+        "value": "640px"
+      },
+      {
+        "name": "phone",
+        "value": "520px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink primary action; one per head row.",
+      "html": "<button class=\"ds-btn\">Start mock interview</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 16px;border-radius:var(--r,4px);background:var(--ink,#22212A);color:#fff;border:1px solid var(--ink,#22212A);font:600 15px/1.2 \"Anek Latin\", \"Segoe UI\", system-ui, sans-serif;cursor:pointer;transition:background .15s,border-color .15s,transform .1s}.ds-btn:hover{background:#3A3944;border-color:#3A3944}.ds-btn:active{transform:translateY(1px)}.ds-btn:focus-visible{outline:2px solid var(--coach,#1C4A9C);outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "White sheet with control-rule border.",
+      "html": "<button class=\"ds-btn-sec\">New resume</button>",
+      "css": ".ds-btn-sec{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 16px;border-radius:var(--r,4px);background:#fff;color:var(--ink,#22212A);border:1px solid #A9B3A4;font:600 15px/1.2 \"Anek Latin\", \"Segoe UI\", system-ui, sans-serif;cursor:pointer;transition:border-color .15s}.ds-btn-sec:hover{border-color:var(--ink,#22212A)}.ds-btn-sec:focus-visible{outline:2px solid var(--coach,#1C4A9C);outline-offset:2px}"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Destructive action; fills waitlist red on hover.",
+      "html": "<button class=\"ds-btn-danger\">Clear this session</button>",
+      "css": ".ds-btn-danger{display:inline-flex;align-items:center;min-height:40px;padding:8px 16px;border-radius:var(--r,4px);background:#fff;color:var(--wl,#B23A2B);border:1px solid var(--wl,#B23A2B);font:600 15px/1.2 \"Anek Latin\", \"Segoe UI\", system-ui, sans-serif;cursor:pointer;transition:background .15s}.ds-btn-danger:hover{background:var(--wl,#B23A2B);color:#fff}.ds-btn-danger:focus-visible{outline:2px solid var(--coach,#1C4A9C);outline-offset:2px}"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "White field with control-rule border and coach focus ring.",
+      "html": "<label class=\"ds-field\"><span>Target role</span><input class=\"ds-input\" placeholder=\"Backend Developer\"></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:6px;font:600 14px \"Anek Latin\", \"Segoe UI\", system-ui, sans-serif;color:var(--ink,#22212A)}.ds-input{min-height:40px;padding:8px 12px;border-radius:var(--r,4px);border:1px solid #A9B3A4;background:#fff;font:400 15px \"Anek Latin\", \"Segoe UI\", system-ui, sans-serif;color:var(--ink,#22212A)}.ds-input::placeholder{color:#6E6C79}.ds-input:focus{outline:none;border-color:var(--coach,#1C4A9C);box-shadow:0 0 0 3px rgba(28,74,156,.18)}"
+    },
+    {
+      "name": "Status Chips",
+      "kind": "chip",
+      "refersTo": "pnr-chip-wl",
+      "description": "Doto status chips in the three status inks.",
+      "html": "<span class=\"ds-chip ds-wl\">WL 7</span> <span class=\"ds-chip ds-rac\">RAC 3</span> <span class=\"ds-chip ds-cnf\">CNF</span>",
+      "css": ".ds-chip{display:inline-flex;align-items:center;font:900 13px/1 \"Doto\", \"Anek Latin\", monospace;padding:4px 6px 3px;border-radius:2px;color:#fff;letter-spacing:.04em;word-spacing:-.18em}.ds-wl{background:var(--wl,#B23A2B)}.ds-rac{background:var(--rac,#9A6200)}.ds-cnf{background:var(--cnf,#1F7A4D)}"
+    },
+    {
+      "name": "Status Block",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Signature: dot-matrix code, context heading beside it, trail, closed by a 2px ink rule.",
+      "html": "<div class=\"ds-status\"><span class=\"ds-code\">RAC 3</span><div><b>Backend Developer: 3 items from confirmed</b><span>Each one you clear moves you up.</span><div class=\"ds-trail\">WL 7 &rarr; <b>RAC 3</b> &rarr; CNF</div></div></div>",
+      "css": ".ds-status{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 28px;align-items:end;padding-bottom:18px;border-bottom:2px solid var(--ink,#22212A);font-family:\"Anek Latin\", \"Segoe UI\", system-ui, sans-serif;color:var(--ink,#22212A)}.ds-code{font:900 64px/.8 \"Doto\", \"Anek Latin\", monospace;letter-spacing:.03em;word-spacing:-.32em;color:var(--rac,#9A6200);white-space:nowrap}.ds-status b{display:block;font-size:20px;line-height:1.25}.ds-status span{font-size:15px;color:var(--ink-2,#4E4C58)}.ds-trail{font:700 15px/1.6 \"Doto\", \"Anek Latin\", monospace;color:var(--ink-2,#4E4C58);margin-top:6px}.ds-trail b{display:inline;font-size:inherit;font-weight:900}"
+    },
+    {
+      "name": "Score Strip",
+      "kind": "custom",
+      "refersTo": "score-cell-overall",
+      "description": "Equal cells of Doto numerals; overall cell inverted ink.",
+      "html": "<div class=\"ds-strip\"><div class=\"ds-inv\"><span>Overall</span><b>74</b></div><div><span>Structure</span><b>87</b></div><div><span>Impact</span><b class=\"ds-low\">57</b></div><div><span>ATS</span><b>100</b></div></div>",
+      "css": ".ds-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid #C9D3C4;background:#fff;font-family:\"Anek Latin\", \"Segoe UI\", system-ui, sans-serif}.ds-strip>div{padding:11px 14px 9px;border-right:1px solid #C9D3C4}.ds-strip>div:last-child{border-right:0}.ds-strip span{display:block;font-size:13px;color:#4E4C58}.ds-strip b{display:block;font:900 32px/1.1 \"Doto\", \"Anek Latin\", monospace;color:#22212A}.ds-strip .ds-inv{background:#22212A}.ds-strip .ds-inv span{color:#CFCDD8}.ds-strip .ds-inv b{color:#fff}.ds-strip .ds-low{color:#B23A2B}"
+    },
+    {
+      "name": "Green-Bar Chart",
+      "kind": "card",
+      "refersTo": "",
+      "description": "Findings table: mono line IDs, alternating paper and green bar, Doto status column, current row outlined coach blue.",
+      "html": "<table class=\"ds-chart\"><thead><tr><th>Line</th><th>What the recruiter sees</th><th>Status</th></tr></thead><tbody><tr><td class=\"ds-id\">S1</td><td><b>Generic objective</b></td><td class=\"ds-st ds-wl\">WL 1</td></tr><tr class=\"ds-cur\"><td class=\"ds-id\">C1</td><td><b>No GitHub link</b></td><td class=\"ds-st ds-rac\">RAC 1</td></tr><tr><td class=\"ds-id\">E3</td><td><b>Quantified impact</b></td><td class=\"ds-st ds-cnf\">CNF</td></tr></tbody></table>",
+      "css": ".ds-chart{width:100%;border-collapse:separate;border-spacing:0;font:15px \"Anek Latin\", \"Segoe UI\", system-ui, sans-serif;color:#22212A}.ds-chart th{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#4E4C58;text-align:left;padding:8px 12px;border-bottom:1px solid #22212A}.ds-chart th:last-child{text-align:right}.ds-chart td{padding:11px 12px;border-bottom:1px solid #C9D3C4}.ds-chart tbody tr:nth-child(odd){background:#F8FAF6}.ds-chart tbody tr:nth-child(even){background:#DDEAD6}.ds-chart tbody tr:hover{background:#E3EAF7}.ds-chart .ds-cur{outline:2px solid #1C4A9C;outline-offset:-2px}.ds-id{font:600 13px \"JetBrains Mono\", ui-monospace, Consolas, monospace;color:#4E4C58}.ds-st{text-align:right;font:900 15px \"Doto\", \"Anek Latin\", monospace;white-space:nowrap}.ds-wl{color:#B23A2B}.ds-rac{color:#9A6200}.ds-cnf{color:#1F7A4D}"
+    },
+    {
+      "name": "Shell Rail",
+      "kind": "nav",
+      "refersTo": "shell-rail",
+      "description": "Coach-blue rail; current page is a paper tab with coach text.",
+      "html": "<nav class=\"ds-rail\"><b class=\"ds-brand\">VARS</b><a href=\"#\">Home</a><a href=\"#\" aria-current=\"page\">Resume Studio <span class=\"ds-tag\">WL 9</span></a><a href=\"#\">Mock interview</a></nav>",
+      "css": ".ds-rail{width:236px;background:#1C4A9C;padding:24px 0;display:flex;flex-direction:column;font:16px \"Anek Latin\", \"Segoe UI\", system-ui, sans-serif}.ds-brand{font:900 34px/1 \"Doto\", \"Anek Latin\", monospace;letter-spacing:.04em;color:#fff;padding:0 24px 26px}.ds-rail a{display:flex;align-items:center;gap:12px;padding:10px 24px;color:#C3D1EE;text-decoration:none}.ds-rail a:hover{background:#163D82;color:#fff}.ds-rail a:focus-visible{outline:2px solid #fff;outline-offset:-2px}.ds-rail a[aria-current=page]{background:#F3F5F0;color:#1C4A9C;font-weight:700}.ds-tag{margin-left:auto;font:900 12px/1 \"Doto\", \"Anek Latin\", monospace;padding:3px 5px;background:#1C4A9C;color:#fff;border-radius:2px}"
+    },
+    {
+      "name": "Tabs",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Hairline tab strip; selected tab ink 700 with a 3px coach underline.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\"><button aria-selected=\"true\">Analysis <span>12</span></button><button>Role fit</button><button>Match a job description</button></div>",
+      "css": ".ds-tabs{display:flex;gap:26px;border-bottom:1px solid #C9D3C4;font-family:\"Anek Latin\", \"Segoe UI\", system-ui, sans-serif}.ds-tabs button{background:none;border:0;padding:0 0 11px;font-size:15px;color:#4E4C58;cursor:pointer}.ds-tabs button:hover{color:#22212A}.ds-tabs button:focus-visible{outline:2px solid #1C4A9C;outline-offset:2px}.ds-tabs button[aria-selected=true]{color:#22212A;font-weight:700;box-shadow:inset 0 -3px #1C4A9C}.ds-tabs span{font:600 12px \"JetBrains Mono\", ui-monospace, Consolas, monospace;color:#5F5D6A;margin-left:6px}"
+    },
+    {
+      "name": "Ticker",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Mono caps loading line with four pulsing dots.",
+      "html": "<span class=\"ds-ticker\">Reading your resume<span class=\"ds-dots\"><b></b><b></b><b></b><b></b></span></span>",
+      "css": ".ds-ticker{display:inline-flex;align-items:center;gap:10px;font:700 14px/1 \"JetBrains Mono\", ui-monospace, Consolas, monospace;letter-spacing:.08em;text-transform:uppercase;color:#22212A}.ds-dots{display:inline-flex;gap:5px}.ds-dots b{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.2;animation:ds-dotp 1.2s steps(1) infinite}.ds-dots b:nth-child(2){animation-delay:.2s}.ds-dots b:nth-child(3){animation-delay:.4s}.ds-dots b:nth-child(4){animation-delay:.6s}@keyframes ds-dotp{0%,100%{opacity:.2}30%{opacity:1}}@media (prefers-reduced-motion:reduce){.ds-dots b{animation:none;opacity:.6}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Reservation Chart",
+    "overview": "VARS treats placement readiness like an Indian Railways PNR. Every target role, open finding, interview round and report verdict carries a counted status that clears as concrete items are fixed: WL 7, then RAC 3, then CNF. The surface is continuous-stationery paper with pale green bars on data rows, ribbon-black ink, and a coach-blue shell rail. Status codes, headline numerals and the wordmark print in a dot-matrix face, so the number a student is waiting on looks like a printed chart entry rather than a score ring.\n\nDensity is that of an operating tool: hairline rules, tables with line IDs, a resume page on white paper with pins in its margin and leaders to the quoted line, and a findings chart beside it. Colour is spent sparingly. Three status inks appear only on statuses; coach blue marks the shell and the one current step; everything else is ink on paper. The report arrives as a \"chart prepared\" printout with an ink header band and a perforation rule.\n\nThe world refuses the category default of a score ring over suggestion cards on grey, and it refuses decoration that does not carry a reading: no gradients, no glows, no status colour used as ornament.",
+    "keyCharacteristics": [
+      "Readiness grammar: count the open items; 0 is CNF, 1 to 3 is RAC n, more is WL n.",
+      "Paper ground, green-bar rows, ribbon ink; one coach-blue rail.",
+      "Doto dot-matrix reserved for status codes, headline numerals and the VARS wordmark.",
+      "JetBrains Mono 700 caps for labels, speaker names, line IDs and tickers.",
+      "Square-ish 4px corners, 1px hairlines, heavy 2px ink rules under status blocks.",
+      "Shadow only where something is a physical document or floats above the page."
+    ],
+    "rules": [
+      {
+        "name": "The Status Ink Rule",
+        "body": "cnf, rac and wl (and their -bg and hl- tints) appear only where they encode a readiness state, a test result or a recording/destructive action. Never as section colour, icon tint or decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Current Step Rule",
+        "body": "Coach blue is the shell rail plus the one thing that is current or selected. If two unrelated elements on a screen are blue outside the rail, one of them is wrong. Primary buttons are ink, never blue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dot-Matrix Rule",
+        "body": "Doto is used only for status codes (WL n, RAC n, CNF), headline numerals and the VARS wordmark. Never for words, labels, buttons or headings.",
+        "section": "typography"
+      },
+      {
+        "name": "The Clerk's Hand Rule",
+        "body": "Labels, speaker names, line IDs and tickers are JetBrains Mono 700 caps. UI text is Anek Latin. A third role for either face needs a reason in the data.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paper Only Rule",
+        "body": "A shadow means \"this is a sheet of paper\" or \"this is floating\". Panels, cards, strips and tables stay flat with a hairline border.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** derive every status from the open-item count: 0 is CNF, 1 to 3 is RAC n, more is WL n.",
+      "**Do** put the context for a status code in the heading beside it, not in a label above it.",
+      "**Do** keep primary buttons ink (#22212A per the ink token); one primary per head row.",
+      "**Do** mark the current tab, row, round, question and selected option in coach blue, and nothing else outside the rail.",
+      "**Do** stripe data rows paper-2 and bar, with mono line IDs on the left and Doto statuses on the right.",
+      "**Do** close status blocks and section heads with ink rules (2px and 1px) instead of boxing them.",
+      "**Do** give every voice action a typed alternative and keep the reduced-motion override that collapses the tick, flash and ticker."
+    ],
+    "donts": [
+      "**Don't** set words, labels, buttons or headings in Doto.",
+      "**Don't** put an eyebrow or kicker label above a status code or heading.",
+      "**Don't** use cnf, rac or wl colours on anything that is not a status, test result, recording state or destructive action.",
+      "**Don't** fill primary buttons coach blue.",
+      "**Don't** add shadows to panels, cards or tables; only documents and floating layers carry them.",
+      "**Don't** show a score ring or a bare number without the line or item it comes from.",
+      "**Don't** introduce corners above 6px or pill shapes on controls."
+    ]
+  }
+}

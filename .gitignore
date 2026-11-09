@@ -1,18 +1,28 @@
 # Virtual environment
 venv/
+.venv/
 
 # Python cache
 __pycache__/
 *.pyc
 
-# Environment variables
+# Secrets
 .env
 
-# OS files
+# OS / editor
 .DS_Store
 Thumbs.db
-
-# IDE settings
 .vscode/
 
+# Never commit user data: recordings, uploads, screen captures
 uploads/
+*.webm
+*.wav
+*.mp4
+*.vars.json
+
+# Local tooling output
+.playwright-mcp/
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/build/

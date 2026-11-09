@@ -1,0 +1,63 @@
+/* Build by voice + printable resume */
+
+.build { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 30px; align-items: start; max-width: 1280px; }
+.speak { display: grid; gap: 18px; }
+.speak-panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--r); padding: 22px; display: grid; gap: 16px; }
+.speak-panel h2 { font-size: 22px; line-height: 1.2; font-variation-settings: "wdth" 90; }
+.big-mic { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: center; }
+.big-mic .mic { width: 84px; height: 84px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; }
+.big-mic .mic svg { width: 32px; height: 32px; }
+.big-mic .mic.rec { background: var(--wl); }
+.big-mic .mic:hover { background: #3A3944; }
+.big-mic .mic.rec:hover { background: #962F22; }
+.big-mic b { display: block; font-size: 17px; }
+.big-mic span { color: var(--ink-2); font-size: 14px; }
+.rec-clock { font: 900 26px var(--f-dot); color: var(--ink-2); }
+.prompts { display: grid; border-top: 1px solid var(--ink); }
+.prompts button { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: start; text-align: left; padding: 11px 0; border-bottom: 1px solid var(--rule); font-size: 15px; }
+.prompts button:hover { color: var(--coach); }
+.prompts button svg { width: 18px; height: 18px; margin-top: 2px; color: var(--ink-3); }
+.prompts button small { display: block; color: var(--ink-2); font-size: 13.5px; }
+.prompts .done svg { color: var(--cnf); }
+.fields { width: 100%; }
+.fields td.v { color: var(--ink-2); font-size: 14px; overflow-wrap: anywhere; }
+.preview-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.assistant { background: var(--sheet); border: 2px solid var(--ink); border-radius: var(--r); padding: 18px; display: grid; gap: 12px; }
+.assistant .step { font: 700 12px var(--f-mono); color: var(--ink-2); letter-spacing: .08em; }
+.assistant h3 { font-size: 19px; line-height: 1.3; }
+.assistant .err { color: var(--wl); font-size: 14px; min-height: 18px; }
+
+/* resume document (preview and print) */
+.cv { background: #fff; color: #1D1C23; font-family: var(--f-ui); font-size: 14px; line-height: 1.5; padding: 34px 40px; box-shadow: var(--shadow-page); }
+.cv h1 { font-size: 28px; line-height: 1.1; font-weight: 700; font-variation-settings: "wdth" 92; letter-spacing: -.005em; }
+.cv .contact { color: #4E4C58; font-size: 13.5px; margin: 6px 0 14px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.cv .contact a { color: #1C4A9C; text-decoration: none; }
+.cv h2 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #1C4A9C; border-bottom: 1.5px solid #1C4A9C; padding-bottom: 2px; margin: 16px 0 8px; }
+.cv .item { margin-bottom: 9px; break-inside: avoid; }
+.cv .item-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.cv .item-top b { font-weight: 700; }
+.cv .item-top span { color: #4E4C58; font-size: 13px; white-space: nowrap; }
+.cv ul { padding-left: 18px; margin-top: 3px; }
+.cv li { margin-bottom: 2px; }
+.cv .skills { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.cv .skills span { border: 1px solid #C9D3C4; padding: 1px 8px; border-radius: 2px; font-size: 13px; }
+.cv .muted { color: #4E4C58; }
+.cv [contenteditable="true"] { outline: 1px dashed #93A9D6; outline-offset: 2px; }
+.cv-empty { color: var(--ink-2); font-size: 15px; padding: 26px 0; }
+
+.print-wrap { max-width: 210mm; margin: 0 auto; padding: 24px 16px 60px; }
+.print-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 18px; }
+@media print {
+  @page { size: A4; margin: 14mm 14mm; }
+  .print-wrap { padding: 0; max-width: none; }
+  .cv { box-shadow: none; padding: 0; }
+  .cv [contenteditable] { outline: none !important; }
+}
+@media (max-width: 1060px) {
+  .build { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .cv { padding: 22px 18px; }
+  .big-mic { grid-template-columns: auto minmax(0, 1fr); }
+  .rec-clock { grid-column: 1 / -1; }
+}

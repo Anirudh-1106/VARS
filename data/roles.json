@@ -1,0 +1,1729 @@
+{
+  "note": "Curated guidance for campus hiring. Skill weights reflect what interviewers for each role typically probe; they are not market statistics.",
+  "roles": [
+    {
+      "id": "sde-service",
+      "title": "Software Engineer (service company)",
+      "family": "Software",
+      "summary": "Mass-recruiter drives: one solid language, OOP, DBMS, OS and networking fundamentals, and a project you can explain end to end.",
+      "core": [
+        {
+          "skill": "A programming language",
+          "any": [
+            "Java",
+            "Python",
+            "C++",
+            "C",
+            "C#",
+            "JavaScript"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Data Structures and Algorithms",
+          "any": [
+            "Data Structures and Algorithms",
+            "Data Structures",
+            "Algorithms",
+            "DSA"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "OOP",
+          "any": [
+            "OOP",
+            "Object Oriented Programming",
+            "OOPS"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "SQL / DBMS",
+          "any": [
+            "SQL",
+            "MySQL",
+            "PostgreSQL",
+            "Oracle",
+            "DBMS",
+            "SQLite",
+            "SQL Server"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Operating Systems",
+          "any": [
+            "Operating Systems",
+            "OS"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Computer Networks",
+          "any": [
+            "Computer Networks",
+            "Networking",
+            "TCP/IP"
+          ],
+          "weight": 2
+        }
+      ],
+      "plus": [
+        "Git",
+        "HTML",
+        "CSS",
+        "Linux",
+        "Cloud basics"
+      ],
+      "often_asked": [
+        "Git",
+        "Cloud basics",
+        "Agile"
+      ],
+      "topics": [
+        "Four pillars of OOP with examples",
+        "SQL joins and normalisation",
+        "Process vs thread, deadlock",
+        "OSI vs TCP/IP layers",
+        "Walk through your final-year project",
+        "Why this company"
+      ],
+      "resources": [
+        {
+          "title": "Computer Science roadmap",
+          "url": "https://roadmap.sh/computer-science"
+        },
+        {
+          "title": "SQLBolt interactive SQL lessons",
+          "url": "https://sqlbolt.com/"
+        },
+        {
+          "title": "IndiaBIX aptitude practice",
+          "url": "https://www.indiabix.com/"
+        }
+      ]
+    },
+    {
+      "id": "sde-product",
+      "title": "Software Development Engineer (product company)",
+      "family": "Software",
+      "summary": "Product-company SDE loops: strong DSA, one language in depth, OOP and low-level design, and basic system design.",
+      "core": [
+        {
+          "skill": "Data Structures and Algorithms",
+          "any": [
+            "Data Structures and Algorithms",
+            "Data Structures",
+            "Algorithms",
+            "DSA",
+            "Competitive Programming",
+            "LeetCode",
+            "Codeforces"
+          ],
+          "weight": 4
+        },
+        {
+          "skill": "A language in depth",
+          "any": [
+            "Java",
+            "C++",
+            "Python",
+            "Go",
+            "C#",
+            "Kotlin"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "OOP and low-level design",
+          "any": [
+            "OOP",
+            "Object Oriented Programming",
+            "Low Level Design",
+            "LLD",
+            "Design Patterns"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "System design basics",
+          "any": [
+            "System Design",
+            "High Level Design",
+            "HLD",
+            "Microservices",
+            "Distributed Systems",
+            "Scalability"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "SQL / DBMS",
+          "any": [
+            "SQL",
+            "MySQL",
+            "PostgreSQL",
+            "DBMS",
+            "MongoDB"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Git",
+          "any": [
+            "Git",
+            "GitHub",
+            "GitLab"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "Operating Systems",
+        "Computer Networks",
+        "Testing",
+        "Docker"
+      ],
+      "often_asked": [
+        "Go",
+        "Kubernetes",
+        "Redis",
+        "Kafka"
+      ],
+      "topics": [
+        "Arrays, hashing, two pointers",
+        "Trees and graphs (BFS/DFS)",
+        "Dynamic programming",
+        "Design a URL shortener",
+        "Complexity of your solution",
+        "A hard bug you fixed"
+      ],
+      "resources": [
+        {
+          "title": "NeetCode roadmap",
+          "url": "https://neetcode.io/roadmap"
+        },
+        {
+          "title": "System Design Primer",
+          "url": "https://github.com/donnemartin/system-design-primer"
+        },
+        {
+          "title": "System design roadmap",
+          "url": "https://roadmap.sh/system-design"
+        }
+      ]
+    },
+    {
+      "id": "backend",
+      "title": "Backend Developer",
+      "family": "Software",
+      "summary": "APIs, databases and the plumbing behind them: a server framework, SQL you can tune, auth, caching and containers.",
+      "core": [
+        {
+          "skill": "A backend language",
+          "any": [
+            "Java",
+            "Python",
+            "Go",
+            "Node.js",
+            "C#",
+            "Kotlin",
+            "PHP",
+            "Ruby"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "REST APIs",
+          "any": [
+            "REST APIs",
+            "REST",
+            "RESTful",
+            "API",
+            "GraphQL",
+            "gRPC",
+            "APIs",
+            "Web APIs"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "SQL databases",
+          "any": [
+            "SQL",
+            "MySQL",
+            "PostgreSQL",
+            "SQLite",
+            "Oracle",
+            "SQL Server"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "A server framework",
+          "any": [
+            "Spring Boot",
+            "Spring",
+            "Django",
+            "Flask",
+            "FastAPI",
+            "Express",
+            "Express.js",
+            "ASP.NET",
+            "NestJS",
+            "Laravel",
+            "Rails"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Docker",
+          "any": [
+            "Docker",
+            "Containers",
+            "Podman"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Git",
+          "any": [
+            "Git",
+            "GitHub",
+            "GitLab"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Linux",
+          "any": [
+            "Linux",
+            "Ubuntu",
+            "Bash",
+            "Shell Scripting"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Caching",
+          "any": [
+            "Redis",
+            "Memcached",
+            "Caching"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Authentication",
+          "any": [
+            "JWT",
+            "OAuth",
+            "Authentication",
+            "Auth"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "MongoDB",
+        "Kafka",
+        "RabbitMQ",
+        "AWS",
+        "Unit testing",
+        "CI/CD"
+      ],
+      "often_asked": [
+        "Kubernetes",
+        "Message queues",
+        "Cloud deployment",
+        "Observability"
+      ],
+      "topics": [
+        "Design a REST API for your project",
+        "Indexes and query plans",
+        "Authentication with JWT",
+        "Handling concurrency and race conditions",
+        "Caching strategy",
+        "Containerising a service"
+      ],
+      "resources": [
+        {
+          "title": "Backend roadmap",
+          "url": "https://roadmap.sh/backend"
+        },
+        {
+          "title": "Docker: get started",
+          "url": "https://docs.docker.com/get-started/"
+        },
+        {
+          "title": "SQL roadmap",
+          "url": "https://roadmap.sh/sql"
+        }
+      ]
+    },
+    {
+      "id": "frontend",
+      "title": "Frontend Developer",
+      "family": "Software",
+      "summary": "Interfaces people use: semantic HTML, modern CSS, JavaScript fundamentals, a component framework and accessibility.",
+      "core": [
+        {
+          "skill": "JavaScript",
+          "any": [
+            "JavaScript",
+            "ES6",
+            "JS"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "A UI framework",
+          "any": [
+            "React",
+            "Angular",
+            "Vue",
+            "Svelte",
+            "Next.js"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "HTML",
+          "any": [
+            "HTML",
+            "HTML5"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "CSS",
+          "any": [
+            "CSS",
+            "CSS3",
+            "Tailwind CSS",
+            "Sass",
+            "Bootstrap"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "TypeScript",
+          "any": [
+            "TypeScript",
+            "TS"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Git",
+          "any": [
+            "Git",
+            "GitHub"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Accessibility",
+          "any": [
+            "Accessibility",
+            "a11y",
+            "WCAG"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Frontend testing",
+          "any": [
+            "Jest",
+            "Vitest",
+            "Cypress",
+            "Playwright",
+            "React Testing Library"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "Responsive design",
+        "Figma",
+        "Web performance",
+        "Redux"
+      ],
+      "often_asked": [
+        "TypeScript",
+        "Next.js",
+        "Web performance"
+      ],
+      "topics": [
+        "Event loop and promises",
+        "Closures and this",
+        "React state and re-renders",
+        "CSS layout: flex vs grid",
+        "Making a page accessible",
+        "Optimising load time"
+      ],
+      "resources": [
+        {
+          "title": "Frontend roadmap",
+          "url": "https://roadmap.sh/frontend"
+        },
+        {
+          "title": "The Odin Project",
+          "url": "https://www.theodinproject.com/"
+        },
+        {
+          "title": "MDN: learn web development",
+          "url": "https://developer.mozilla.org/en-US/docs/Learn"
+        }
+      ]
+    },
+    {
+      "id": "fullstack",
+      "title": "Full-stack Developer",
+      "family": "Software",
+      "summary": "Ships features end to end: a frontend framework, a backend, a database and a way to deploy it.",
+      "core": [
+        {
+          "skill": "JavaScript / TypeScript",
+          "any": [
+            "JavaScript",
+            "TypeScript"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "A UI framework",
+          "any": [
+            "React",
+            "Angular",
+            "Vue",
+            "Next.js",
+            "Svelte"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "A backend framework",
+          "any": [
+            "Node.js",
+            "Express",
+            "Express.js",
+            "Django",
+            "Flask",
+            "FastAPI",
+            "Spring Boot",
+            "NestJS"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Databases",
+          "any": [
+            "SQL",
+            "MySQL",
+            "PostgreSQL",
+            "MongoDB",
+            "Firebase",
+            "SQLite"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "REST APIs",
+          "any": [
+            "REST APIs",
+            "REST",
+            "RESTful",
+            "API",
+            "GraphQL",
+            "APIs",
+            "Web APIs"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Git",
+          "any": [
+            "Git",
+            "GitHub"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Deployment",
+          "any": [
+            "Docker",
+            "AWS",
+            "Vercel",
+            "Netlify",
+            "Render",
+            "Heroku",
+            "Azure",
+            "Google Cloud"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "Testing",
+        "CI/CD",
+        "Tailwind CSS",
+        "Redis"
+      ],
+      "often_asked": [
+        "TypeScript",
+        "Next.js",
+        "Docker"
+      ],
+      "topics": [
+        "Architecture of your project",
+        "Auth flow from form to database",
+        "SQL vs NoSQL choice",
+        "State management",
+        "Deploying and environment variables"
+      ],
+      "resources": [
+        {
+          "title": "Full-stack roadmap",
+          "url": "https://roadmap.sh/full-stack"
+        },
+        {
+          "title": "The Odin Project",
+          "url": "https://www.theodinproject.com/"
+        },
+        {
+          "title": "Git book",
+          "url": "https://git-scm.com/book/en/v2"
+        }
+      ]
+    },
+    {
+      "id": "mobile",
+      "title": "Mobile Developer (Android / Flutter)",
+      "family": "Software",
+      "summary": "Native or cross-platform apps: Kotlin or Dart, a modern UI toolkit, local storage, networking and publishing.",
+      "core": [
+        {
+          "skill": "A mobile language",
+          "any": [
+            "Kotlin",
+            "Java",
+            "Dart",
+            "Swift"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "A mobile toolkit",
+          "any": [
+            "Android SDK",
+            "Android",
+            "Flutter",
+            "Jetpack Compose",
+            "React Native",
+            "SwiftUI"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Networking",
+          "any": [
+            "Retrofit",
+            "REST APIs",
+            "REST",
+            "API",
+            "APIs",
+            "Web APIs"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Local storage",
+          "any": [
+            "Room",
+            "SQLite",
+            "Hive",
+            "Realm"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Firebase",
+          "any": [
+            "Firebase",
+            "Firestore"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Git",
+          "any": [
+            "Git",
+            "GitHub"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "MVVM",
+        "Coroutines",
+        "Play Store publishing",
+        "Material Design"
+      ],
+      "often_asked": [
+        "Jetpack Compose",
+        "Kotlin Coroutines",
+        "Flutter"
+      ],
+      "topics": [
+        "Activity and fragment lifecycle",
+        "MVVM in your app",
+        "Handling configuration changes",
+        "Offline-first data",
+        "Publishing an app"
+      ],
+      "resources": [
+        {
+          "title": "Android Basics with Compose",
+          "url": "https://developer.android.com/courses/android-basics-compose/course"
+        },
+        {
+          "title": "Android roadmap",
+          "url": "https://roadmap.sh/android"
+        },
+        {
+          "title": "Flutter roadmap",
+          "url": "https://roadmap.sh/flutter"
+        }
+      ]
+    },
+    {
+      "id": "data-analyst",
+      "title": "Data Analyst",
+      "family": "Data",
+      "summary": "Turns raw tables into decisions: SQL first, spreadsheets, a BI tool, Python for cleaning, and enough statistics to be careful.",
+      "core": [
+        {
+          "skill": "SQL",
+          "any": [
+            "SQL",
+            "MySQL",
+            "PostgreSQL",
+            "SQL Server",
+            "BigQuery"
+          ],
+          "weight": 4
+        },
+        {
+          "skill": "Excel",
+          "any": [
+            "Excel",
+            "MS Excel",
+            "Google Sheets",
+            "Spreadsheets"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "A BI tool",
+          "any": [
+            "Power BI",
+            "Tableau",
+            "Looker",
+            "Looker Studio",
+            "Metabase"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Python for data",
+          "any": [
+            "Python",
+            "Pandas",
+            "NumPy",
+            "R"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Statistics",
+          "any": [
+            "Statistics",
+            "Probability",
+            "Hypothesis Testing",
+            "A/B Testing"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Data visualisation",
+          "any": [
+            "Data Visualization",
+            "Matplotlib",
+            "Seaborn",
+            "Plotly"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "Data cleaning",
+        "Dashboards",
+        "Storytelling with data"
+      ],
+      "often_asked": [
+        "Power BI",
+        "Python",
+        "A/B testing"
+      ],
+      "topics": [
+        "Window functions",
+        "GROUP BY with HAVING",
+        "Explaining a dashboard you built",
+        "Handling missing values",
+        "Mean vs median",
+        "A metric you would track"
+      ],
+      "resources": [
+        {
+          "title": "Data analyst roadmap",
+          "url": "https://roadmap.sh/data-analyst"
+        },
+        {
+          "title": "SQLBolt",
+          "url": "https://sqlbolt.com/"
+        },
+        {
+          "title": "Kaggle Learn",
+          "url": "https://www.kaggle.com/learn"
+        },
+        {
+          "title": "Power BI on Microsoft Learn",
+          "url": "https://learn.microsoft.com/en-us/training/powerplatform/power-bi"
+        }
+      ]
+    },
+    {
+      "id": "ml",
+      "title": "Data Scientist / ML Engineer",
+      "family": "Data",
+      "summary": "Models that work outside a notebook: Python, classical ML, statistics, a deep-learning framework and evaluation discipline.",
+      "core": [
+        {
+          "skill": "Python",
+          "any": [
+            "Python"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Machine learning",
+          "any": [
+            "Machine Learning",
+            "scikit-learn",
+            "XGBoost",
+            "ML"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Statistics",
+          "any": [
+            "Statistics",
+            "Probability",
+            "Linear Algebra"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Deep learning",
+          "any": [
+            "Deep Learning",
+            "PyTorch",
+            "TensorFlow",
+            "Keras",
+            "Neural Networks"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Data wrangling",
+          "any": [
+            "Pandas",
+            "NumPy",
+            "Data Cleaning"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "SQL",
+          "any": [
+            "SQL",
+            "MySQL",
+            "PostgreSQL"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "NLP or computer vision",
+          "any": [
+            "NLP",
+            "Natural Language Processing",
+            "Computer Vision",
+            "OpenCV",
+            "Transformers",
+            "LLM",
+            "LLMs",
+            "RAG"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Model deployment",
+          "any": [
+            "MLOps",
+            "Docker",
+            "FastAPI",
+            "Flask",
+            "Streamlit",
+            "MLflow"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "Feature engineering",
+        "Experiment tracking",
+        "Cloud ML"
+      ],
+      "often_asked": [
+        "LLMs and RAG",
+        "MLOps",
+        "Vector databases"
+      ],
+      "topics": [
+        "Bias-variance trade-off",
+        "Precision, recall and when each matters",
+        "Overfitting in your project",
+        "How you split and validated data",
+        "Deploying a model"
+      ],
+      "resources": [
+        {
+          "title": "AI and data scientist roadmap",
+          "url": "https://roadmap.sh/ai-data-scientist"
+        },
+        {
+          "title": "scikit-learn tutorials",
+          "url": "https://scikit-learn.org/stable/tutorial/index.html"
+        },
+        {
+          "title": "Practical Deep Learning (fast.ai)",
+          "url": "https://course.fast.ai/"
+        },
+        {
+          "title": "Kaggle Learn",
+          "url": "https://www.kaggle.com/learn"
+        }
+      ]
+    },
+    {
+      "id": "devops",
+      "title": "DevOps / Cloud Engineer",
+      "family": "Infrastructure",
+      "summary": "Keeps software shipping and running: Linux, a cloud, containers, pipelines and infrastructure as code.",
+      "core": [
+        {
+          "skill": "Linux",
+          "any": [
+            "Linux",
+            "Ubuntu",
+            "RHEL",
+            "Unix"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "A cloud platform",
+          "any": [
+            "AWS",
+            "Azure",
+            "Google Cloud",
+            "GCP",
+            "Cloud"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Docker",
+          "any": [
+            "Docker",
+            "Containers"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Kubernetes",
+          "any": [
+            "Kubernetes",
+            "K8s",
+            "EKS",
+            "AKS",
+            "GKE"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "CI/CD",
+          "any": [
+            "CI/CD",
+            "Jenkins",
+            "GitHub Actions",
+            "GitLab CI",
+            "Azure DevOps"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Scripting",
+          "any": [
+            "Bash",
+            "Shell Scripting",
+            "Python",
+            "PowerShell"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Infrastructure as code",
+          "any": [
+            "Terraform",
+            "Ansible",
+            "CloudFormation",
+            "Pulumi"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Monitoring",
+          "any": [
+            "Prometheus",
+            "Grafana",
+            "ELK",
+            "CloudWatch",
+            "Datadog"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "Networking",
+        "Git",
+        "Helm",
+        "Security basics"
+      ],
+      "often_asked": [
+        "Terraform",
+        "Kubernetes",
+        "Observability"
+      ],
+      "topics": [
+        "What happens when you type a URL",
+        "Dockerfile best practices",
+        "Blue-green vs rolling deploys",
+        "Debugging a failing pipeline",
+        "Linux permissions and processes"
+      ],
+      "resources": [
+        {
+          "title": "DevOps roadmap",
+          "url": "https://roadmap.sh/devops"
+        },
+        {
+          "title": "Kubernetes basics",
+          "url": "https://kubernetes.io/docs/tutorials/kubernetes-basics/"
+        },
+        {
+          "title": "Docker: get started",
+          "url": "https://docs.docker.com/get-started/"
+        }
+      ]
+    },
+    {
+      "id": "qa",
+      "title": "QA / SDET",
+      "family": "Software",
+      "summary": "Finds the bug before the user does: test design, automation frameworks, API testing and a language to script it all.",
+      "core": [
+        {
+          "skill": "Testing fundamentals",
+          "any": [
+            "Manual Testing",
+            "Software Testing",
+            "Test Cases",
+            "STLC",
+            "Test Planning"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Test automation",
+          "any": [
+            "Selenium",
+            "Playwright",
+            "Cypress",
+            "Appium",
+            "TestNG",
+            "JUnit",
+            "PyTest"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "A scripting language",
+          "any": [
+            "Java",
+            "Python",
+            "JavaScript",
+            "TypeScript"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "API testing",
+          "any": [
+            "Postman",
+            "REST Assured",
+            "API Testing",
+            "REST APIs",
+            "APIs",
+            "Web APIs"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "SQL",
+          "any": [
+            "SQL",
+            "MySQL"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Bug tracking",
+          "any": [
+            "JIRA",
+            "Bugzilla",
+            "Azure Boards"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "CI/CD",
+        "Performance testing",
+        "Git"
+      ],
+      "often_asked": [
+        "Playwright",
+        "API automation",
+        "CI integration"
+      ],
+      "topics": [
+        "Test cases for a login page",
+        "Severity vs priority",
+        "Flaky tests and fixes",
+        "Page object model",
+        "Testing an API"
+      ],
+      "resources": [
+        {
+          "title": "QA roadmap",
+          "url": "https://roadmap.sh/qa"
+        },
+        {
+          "title": "Playwright docs",
+          "url": "https://playwright.dev/docs/intro"
+        },
+        {
+          "title": "Postman learning centre",
+          "url": "https://learning.postman.com/"
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "title": "Cybersecurity Analyst",
+      "family": "Infrastructure",
+      "summary": "Defends systems: networking, Linux, web vulnerabilities, the standard toolset and scripting.",
+      "core": [
+        {
+          "skill": "Networking",
+          "any": [
+            "Computer Networks",
+            "Networking",
+            "TCP/IP",
+            "CCNA"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Security fundamentals",
+          "any": [
+            "OWASP",
+            "Cryptography",
+            "Network Security",
+            "Web Security",
+            "Vulnerability Assessment",
+            "Penetration Testing"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Linux",
+          "any": [
+            "Linux",
+            "Kali Linux",
+            "Ubuntu"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Security tools",
+          "any": [
+            "Wireshark",
+            "Nmap",
+            "Burp Suite",
+            "Metasploit",
+            "Nessus"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Scripting",
+          "any": [
+            "Python",
+            "Bash",
+            "PowerShell"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "SIEM",
+          "any": [
+            "Splunk",
+            "SIEM",
+            "QRadar",
+            "ELK"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "CTFs",
+        "Cloud security",
+        "Incident response"
+      ],
+      "often_asked": [
+        "Cloud security",
+        "SOC operations",
+        "Security+ or CEH"
+      ],
+      "topics": [
+        "SQL injection and prevention",
+        "Symmetric vs asymmetric encryption",
+        "How a TLS handshake works",
+        "A CTF you solved",
+        "Responding to a phishing incident"
+      ],
+      "resources": [
+        {
+          "title": "Cyber security roadmap",
+          "url": "https://roadmap.sh/cyber-security"
+        },
+        {
+          "title": "PortSwigger Web Security Academy",
+          "url": "https://portswigger.net/web-security"
+        },
+        {
+          "title": "OWASP Top 10",
+          "url": "https://owasp.org/www-project-top-ten/"
+        },
+        {
+          "title": "TryHackMe",
+          "url": "https://tryhackme.com/"
+        }
+      ]
+    },
+    {
+      "id": "uiux",
+      "title": "UI/UX Designer",
+      "family": "Design",
+      "summary": "Designs products people can use: research, flows, prototypes in Figma, design systems and usability testing.",
+      "core": [
+        {
+          "skill": "Figma",
+          "any": [
+            "Figma",
+            "Adobe XD",
+            "Sketch"
+          ],
+          "weight": 4
+        },
+        {
+          "skill": "Wireframing and prototyping",
+          "any": [
+            "Wireframing",
+            "Prototyping",
+            "Wireframes",
+            "Prototype"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "User research",
+          "any": [
+            "User Research",
+            "User Interviews",
+            "Personas",
+            "Journey Mapping"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Usability testing",
+          "any": [
+            "Usability Testing",
+            "User Testing",
+            "Heuristic Evaluation"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Design systems",
+          "any": [
+            "Design Systems",
+            "Component Library",
+            "Material Design"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Visual design",
+          "any": [
+            "Typography",
+            "Visual Design",
+            "Color Theory",
+            "Layout"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "HTML/CSS",
+          "any": [
+            "HTML",
+            "CSS"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "Accessibility",
+        "Motion design",
+        "Portfolio case studies"
+      ],
+      "often_asked": [
+        "Accessibility",
+        "Prototyping with variables",
+        "Case-study storytelling"
+      ],
+      "topics": [
+        "Walk through a case study",
+        "A design decision you changed after testing",
+        "Designing for accessibility",
+        "Handling conflicting feedback"
+      ],
+      "resources": [
+        {
+          "title": "UX design roadmap",
+          "url": "https://roadmap.sh/ux-design"
+        },
+        {
+          "title": "Laws of UX",
+          "url": "https://lawsofux.com/"
+        },
+        {
+          "title": "Figma help centre",
+          "url": "https://help.figma.com/"
+        }
+      ]
+    },
+    {
+      "id": "business-analyst",
+      "title": "Business Analyst",
+      "family": "Business",
+      "summary": "Bridges business and tech: requirements, data, process models and clear communication.",
+      "core": [
+        {
+          "skill": "Excel",
+          "any": [
+            "Excel",
+            "MS Excel",
+            "Google Sheets"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "SQL",
+          "any": [
+            "SQL",
+            "MySQL",
+            "PostgreSQL"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Requirements gathering",
+          "any": [
+            "Requirements Gathering",
+            "BRD",
+            "User Stories",
+            "Requirement Analysis"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Visualisation",
+          "any": [
+            "Power BI",
+            "Tableau",
+            "Looker Studio"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Process modelling",
+          "any": [
+            "UML",
+            "BPMN",
+            "Flowcharts",
+            "Process Mapping"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Agile",
+          "any": [
+            "Agile",
+            "Scrum",
+            "JIRA"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "Statistics",
+        "Presentation",
+        "Domain knowledge"
+      ],
+      "often_asked": [
+        "Power BI",
+        "SQL",
+        "Stakeholder management"
+      ],
+      "topics": [
+        "Gathering requirements from a vague request",
+        "A KPI you would define",
+        "Explaining data to a non-technical person",
+        "Prioritising features"
+      ],
+      "resources": [
+        {
+          "title": "Data analyst roadmap",
+          "url": "https://roadmap.sh/data-analyst"
+        },
+        {
+          "title": "SQLBolt",
+          "url": "https://sqlbolt.com/"
+        }
+      ]
+    },
+    {
+      "id": "embedded",
+      "title": "Embedded Systems Engineer",
+      "family": "Hardware",
+      "summary": "Software close to hardware: C, microcontrollers, an RTOS, communication protocols and debugging on real boards.",
+      "core": [
+        {
+          "skill": "C",
+          "any": [
+            "C",
+            "Embedded C"
+          ],
+          "weight": 4
+        },
+        {
+          "skill": "Microcontrollers",
+          "any": [
+            "Arduino",
+            "STM32",
+            "ARM",
+            "AVR",
+            "ESP32",
+            "Raspberry Pi",
+            "8051",
+            "PIC",
+            "Microcontrollers"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Protocols",
+          "any": [
+            "UART",
+            "SPI",
+            "I2C",
+            "CAN",
+            "Modbus"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "RTOS",
+          "any": [
+            "RTOS",
+            "FreeRTOS",
+            "Zephyr"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Electronics",
+          "any": [
+            "Digital Electronics",
+            "Analog Electronics",
+            "Circuit Design",
+            "PCB Design",
+            "KiCad"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "C++",
+          "any": [
+            "C++"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Embedded Linux",
+          "any": [
+            "Embedded Linux",
+            "Linux",
+            "Yocto"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "Oscilloscope debugging",
+        "IoT",
+        "Python"
+      ],
+      "often_asked": [
+        "IoT",
+        "Zephyr",
+        "Automotive basics"
+      ],
+      "topics": [
+        "Volatile keyword",
+        "Interrupts and ISRs",
+        "SPI vs I2C",
+        "Debouncing a button",
+        "Memory layout of a C program"
+      ],
+      "resources": [
+        {
+          "title": "Arduino documentation",
+          "url": "https://docs.arduino.cc/learn/"
+        },
+        {
+          "title": "FreeRTOS",
+          "url": "https://www.freertos.org/"
+        }
+      ]
+    },
+    {
+      "id": "vlsi",
+      "title": "VLSI / Hardware Design Engineer",
+      "family": "Hardware",
+      "summary": "Digital design and verification: an HDL, digital logic, verification methods and EDA tools.",
+      "core": [
+        {
+          "skill": "An HDL",
+          "any": [
+            "Verilog",
+            "VHDL",
+            "SystemVerilog"
+          ],
+          "weight": 4
+        },
+        {
+          "skill": "Digital design",
+          "any": [
+            "Digital Design",
+            "Digital Electronics",
+            "FSM",
+            "Computer Architecture"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Verification",
+          "any": [
+            "UVM",
+            "SystemVerilog",
+            "Functional Verification",
+            "Testbench"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "EDA tools",
+          "any": [
+            "Cadence",
+            "Synopsys",
+            "Xilinx Vivado",
+            "Vivado",
+            "Quartus",
+            "ModelSim"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "CMOS and timing",
+          "any": [
+            "CMOS",
+            "STA",
+            "Static Timing Analysis"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Scripting",
+          "any": [
+            "Python",
+            "Perl",
+            "Tcl"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "FPGA",
+        "Low-power design",
+        "Linux"
+      ],
+      "often_asked": [
+        "UVM",
+        "FPGA prototyping",
+        "Python scripting"
+      ],
+      "topics": [
+        "Setup and hold time",
+        "Blocking vs non-blocking assignments",
+        "Designing a FIFO",
+        "Clock domain crossing"
+      ],
+      "resources": [
+        {
+          "title": "HDLBits Verilog practice",
+          "url": "https://hdlbits.01xz.net/"
+        },
+        {
+          "title": "ChipVerify",
+          "url": "https://www.chipverify.com/"
+        }
+      ]
+    },
+    {
+      "id": "apm",
+      "title": "Associate Product Manager",
+      "family": "Business",
+      "summary": "Decides what to build: product sense, user research, data, prioritisation and clear writing.",
+      "core": [
+        {
+          "skill": "Product thinking",
+          "any": [
+            "Product Management",
+            "Product Strategy",
+            "PRD",
+            "Roadmapping"
+          ],
+          "weight": 3
+        },
+        {
+          "skill": "Analytics",
+          "any": [
+            "SQL",
+            "Excel",
+            "Google Analytics",
+            "Mixpanel",
+            "A/B Testing"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "User research",
+          "any": [
+            "User Research",
+            "User Interviews",
+            "Surveys"
+          ],
+          "weight": 2
+        },
+        {
+          "skill": "Wireframing",
+          "any": [
+            "Figma",
+            "Wireframing",
+            "Balsamiq"
+          ],
+          "weight": 1
+        },
+        {
+          "skill": "Agile",
+          "any": [
+            "Agile",
+            "Scrum",
+            "JIRA"
+          ],
+          "weight": 1
+        }
+      ],
+      "plus": [
+        "Technical background",
+        "Storytelling",
+        "Market research"
+      ],
+      "often_asked": [
+        "AI product sense",
+        "Metrics",
+        "Prioritisation frameworks"
+      ],
+      "topics": [
+        "Improve a product you use daily",
+        "Define success metrics for a feature",
+        "Prioritise between three requests",
+        "A product decision you disagree with"
+      ],
+      "resources": [
+        {
+          "title": "Product manager roadmap",
+          "url": "https://roadmap.sh/product-manager"
+        }
+      ]
+    }
+  ]
+}

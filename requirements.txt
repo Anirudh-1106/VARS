@@ -1,11 +1,15 @@
-flask>=3.0.0
-python-dotenv>=1.0.0
+flask>=3.0
+python-dotenv>=1.0
 
-# LLM orchestration
-langchain-groq>=0.2.0
+# Hosted language models, speech-to-text and (optionally) speech synthesis
+groq>=0.30
 
-# Speech transcription/translation pipeline
-torch>=2.2.0
-transformers>=4.41.0
-accelerate>=0.30.0
-sentencepiece>=0.2.0
+# Resume parsing (in memory)
+pymupdf>=1.24
+python-docx>=1.1
+
+# Neural interviewer voices
+edge-tts>=7.0
+
+# Optional: run Whisper large-v3 locally on your GPU instead of the hosted API.
+# Install with:  pip install -r requirements-local.txt

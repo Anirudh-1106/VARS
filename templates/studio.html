@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block head %}<link rel="stylesheet" href="/static/css/studio.css?v={{ v }}">{% endblock %}
+{% block main %}
+<div class="page-head">
+  <h1>Resume Studio</h1>
+  <span class="meta" id="docMeta"></span>
+  <div class="actions" id="headActions"></div>
+</div>
+<div class="tabs" role="tablist" id="tabs" hidden>
+  <button role="tab" id="tab-analysis" aria-controls="panel" aria-selected="true" data-tab="analysis">Analysis<span class="count" id="countOpen"></span></button>
+  <button role="tab" id="tab-roles" aria-controls="panel" aria-selected="false" data-tab="roles">Role fit</button>
+  <button role="tab" id="tab-jd" aria-controls="panel" aria-selected="false" data-tab="jd"><span class="long">Match a job description</span><span class="short">Match JD</span></button>
+  <button role="tab" id="tab-ask" aria-controls="panel" aria-selected="false" data-tab="ask"><span class="long">Ask about my resume</span><span class="short">Ask</span></button>
+</div>
+<section class="page-body" id="panel" role="tabpanel" aria-labelledby="tab-analysis"></section>
+{% endblock %}
+{% block scripts %}<script type="module" src="/static/js/pages/studio.js?v={{ v }}"></script>{% endblock %}

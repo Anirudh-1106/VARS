@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block head %}<link rel="stylesheet" href="/static/css/interview.css?v={{ v }}"><link rel="stylesheet" href="/static/css/studio.css?v={{ v }}">{% endblock %}
+{% block main %}
+<div class="page-head">
+  <h1>Placement cell</h1>
+  <span class="meta">Mock drives and cohort readiness, without a database</span>
+</div>
+<div class="tabs" role="tablist" id="tabs">
+  <button role="tab" id="tab-drive" aria-controls="panel" aria-selected="true" data-tab="drive">Create a drive link</button>
+  <button role="tab" id="tab-cohort" aria-controls="panel" aria-selected="false" data-tab="cohort">Read student reports</button>
+</div>
+<section class="page-body" id="panel" role="tabpanel" aria-labelledby="tab-drive"></section>
+{% endblock %}
+{% block scripts %}<script type="module" src="/static/js/pages/cell.js?v={{ v }}"></script>{% endblock %}

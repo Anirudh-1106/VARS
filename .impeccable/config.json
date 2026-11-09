@@ -1,0 +1,53 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-09T07:24:14.212Z",
+        "reason": "Agent decided: throwaway decision-page sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-gateboard.html"
+        ],
+        "createdAt": "2026-11-09T07:24:14.642Z",
+        "reason": "Agent decided: throwaway decision-page sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-gateboard.html"
+        ],
+        "createdAt": "2026-11-09T07:24:15.055Z",
+        "reason": "Agent decided: throwaway decision-page sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-09T07:24:15.486Z",
+        "reason": "Agent decided: the canon sketch intentionally renders the generic category standard (Inter) as the user's comparison option; never shipped"
+      },
+      {
+        "rule": "skipped-heading",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-09T07:24:15.890Z",
+        "reason": "Agent decided: throwaway decision-page sketch under .impeccable/mocks (gitignored, never shipped)"
+      }
+    ]
+  }
+}
