@@ -1,4 +1,5 @@
 import { createPhotoAvatar } from "./photo-avatar.js";
+import { createVideoAvatar } from "./video-avatar.js";
 
 // Illustrated interviewer: a flat SVG bust that blinks, breathes, lip-syncs
 // to the voice's audio energy, nods while the candidate speaks and looks down
@@ -10,6 +11,7 @@ export const PERSONAS = {
   meera: {
     name: "Meera Nair", voice: "Indian English", gender: "female",
     roles: { tech: "Senior backend engineer", hr: "HR lead" },
+    video: { poster: "/static/img/avatars/meera-idle.jpg", talkWebm: "/static/video/meera-talk.webm", talk: "/static/video/meera-talk.mp4" },
     photo: {
       src: "/static/img/avatars/meera.jpg", w: 734, h: 765,
       focus: { x: 367, y: 382 },
@@ -170,12 +172,21 @@ export function createAvatar(personaKey = "meera") {
   let impl = null;
   let current = null;
   let mode = "idle";
+  const videoFailed = new Set();
   function build(key) {
     const p = PERSONAS[key] || PERSONAS.meera;
-    impl = p.photo ? createPhotoAvatar(p.photo) : createSvgAvatar(key);
-    if (p.photo) impl.label?.(`${p.name}, interviewer`);
+    if (p.video && !videoFailed.has(key)) {
+      impl = createVideoAvatar(p.video, () => {
+        // Footage could not load: fall back to the animated portrait.
+        videoFailed.add(key);
+        if (current === key) build(key);
+      });
+    } else {
+      impl = p.photo ? createPhotoAvatar(p.photo) : createSvgAvatar(key);
+    }
+    if (p.photo || p.video) impl.label?.(`${p.name}, interviewer`);
     host.replaceChildren(impl.el);
-    host.classList.toggle("is-photo", !!p.photo);
+    host.classList.toggle("is-photo", !!(p.photo || p.video));
     impl.setMode(mode);
     current = key;
   }

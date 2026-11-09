@@ -26,3 +26,7 @@ uploads/
 .impeccable/review/
 .impeccable/mocks/
 .impeccable/build/
+
+# Avatar footage shipped with the app (derived, silent, cropped)
+!static/video/*.mp4
+!static/video/*.webm

@@ -21,7 +21,7 @@ It is built **privacy-first**: the server has no database and no upload folder. 
 - Polish the wording, then print a clean single-column PDF, or send the resume straight to Resume Studio for scoring.
 
 ### Mock interview
-- **A two-person panel**, one interviewer for the technical round and one for HR. The voices are Indian or British English, each with a lip-synced animated face: an animated portrait (Meera Nair) or illustrated figures. Captions run throughout.
+- **A two-person panel**, one interviewer for the technical round and one for HR. The voices are Indian or British English, each with an animated face. Meera Nair speaks with real talking footage that plays only while her voice does; the other interviewers are illustrated figures. Captions run throughout.
 - **Technical round**: questions grounded in the resume's actual projects, internships and tools, plus fundamentals for the target role. When an answer is thin, the interviewer follows up adaptively.
 - **Coding round**: 15 original problems with hidden test cases. Python and JavaScript run inside the browser (Pyodide / Web Worker); Java and C++ run on the server in a throwaway folder. After submitting, the interviewer reviews the code and asks about its complexity or edge cases.
 - **HR round**: behavioural, situational and motivation questions.
