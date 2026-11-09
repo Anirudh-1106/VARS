@@ -47,6 +47,51 @@
         ],
         "createdAt": "2026-11-09T07:24:15.890Z",
         "reason": "Agent decided: throwaway decision-page sketch under .impeccable/mocks (gitignored, never shipped)"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-11-09T07:41:20.412Z",
+        "reason": "Agent decided: throwaway decision-page sketch under .impeccable/mocks (gitignored, never shipped); each alternative direction intentionally used its own fonts"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-11-09T07:41:20.828Z",
+        "reason": "Agent decided: throwaway decision-page sketch under .impeccable/mocks (gitignored, never shipped); each alternative direction intentionally used its own fonts"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-gateboard.html"
+        ],
+        "createdAt": "2026-11-09T07:41:21.257Z",
+        "reason": "Agent decided: throwaway decision-page sketch under .impeccable/mocks (gitignored, never shipped); each alternative direction intentionally used its own fonts"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/challenger-yellow.html"
+        ],
+        "createdAt": "2026-11-09T07:41:21.681Z",
+        "reason": "Agent decided: throwaway decision-page sketch under .impeccable/mocks (gitignored, never shipped); each alternative direction intentionally used its own fonts"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-11-09T07:41:22.134Z",
+        "reason": "Agent decided: throwaway decision-page sketch under .impeccable/mocks (gitignored, never shipped); each alternative direction intentionally used its own fonts"
       }
     ]
   }
